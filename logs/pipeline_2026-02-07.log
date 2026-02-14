@@ -1,0 +1,579 @@
+2026-02-07 10:01:44,281 - AQI_PIPELINE - INFO - Starting FEATURE ENGINEERING pipeline...
+2026-02-07 10:01:44,293 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:01:46,854 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:01:48,754 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4278
+2026-02-07 10:09:13,424 - AQI_PIPELINE - INFO - Starting MODEL TRAINING pipeline...
+2026-02-07 10:09:13,424 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:09:16,170 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:09:20,351 - AQI_PIPELINE - INFO - Feature rows loaded: 4277
+2026-02-07 10:09:20,369 - AQI_PIPELINE - INFO - Train size: 3421, Test size: 856
+2026-02-07 10:09:20,370 - AQI_PIPELINE - INFO - Training RandomForest...
+2026-02-07 10:09:46,589 - AQI_PIPELINE - INFO - Starting MODEL TRAINING pipeline...
+2026-02-07 10:09:46,589 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:09:47,821 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:09:48,974 - AQI_PIPELINE - INFO - Feature rows loaded: 4277
+2026-02-07 10:09:48,989 - AQI_PIPELINE - INFO - Train size: 3421, Test size: 856
+2026-02-07 10:09:48,994 - AQI_PIPELINE - INFO - Training RandomForest...
+2026-02-07 10:12:13,732 - AQI_PIPELINE - INFO - Starting FEATURE ENGINEERING pipeline...
+2026-02-07 10:12:13,733 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:12:15,250 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:12:16,937 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4278
+2026-02-07 10:12:51,816 - AQI_PIPELINE - INFO - Starting MODEL TRAINING pipeline...
+2026-02-07 10:12:51,816 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:12:53,066 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:12:54,029 - AQI_PIPELINE - INFO - Feature rows loaded: 4277
+2026-02-07 10:12:54,045 - AQI_PIPELINE - INFO - Train size: 3421, Test size: 856
+2026-02-07 10:12:54,052 - AQI_PIPELINE - INFO - Training RandomForest...
+2026-02-07 10:12:58,584 - AQI_PIPELINE - INFO - RandomForest evaluation: RMSE=11.05, MAE=1.81, R2=0.921
+2026-02-07 10:12:58,585 - AQI_PIPELINE - INFO - Training XGBoost...
+2026-02-07 10:12:59,465 - AQI_PIPELINE - INFO - XGBoost evaluation: RMSE=18.20, MAE=4.14, R2=0.786
+2026-02-07 10:12:59,465 - AQI_PIPELINE - INFO - Training Ridge...
+2026-02-07 10:12:59,497 - AQI_PIPELINE - INFO - Ridge evaluation: RMSE=31.08, MAE=15.96, R2=0.375
+2026-02-07 10:12:59,497 - AQI_PIPELINE - INFO - Best model selected: RandomForest
+2026-02-07 10:12:59,851 - AQI_PIPELINE - INFO - Model saved in registry and local file: RandomForest_20260207_051259.pkl
+2026-02-07 10:26:54,247 - AQI_PIPELINE - INFO - Starting MULTI-DAY FEATURE ENGINEERING pipeline...
+2026-02-07 10:26:54,248 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:26:56,202 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:27:25,787 - AQI_PIPELINE - INFO - Starting MULTI-DAY FEATURE ENGINEERING pipeline...
+2026-02-07 10:27:25,788 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:27:26,949 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:29:02,343 - AQI_PIPELINE - INFO - Starting MULTI-DAY FEATURE ENGINEERING pipeline...
+2026-02-07 10:29:02,343 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:29:03,677 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:29:04,678 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4278
+2026-02-07 10:30:35,213 - AQI_PIPELINE - INFO - Starting MULTI-DAY FEATURE ENGINEERING pipeline...
+2026-02-07 10:30:35,213 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:30:36,711 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:30:37,997 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4278
+2026-02-07 10:33:30,297 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 10:33:30,297 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:33:31,878 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:33:36,834 - AQI_PIPELINE - INFO - Feature rows loaded: 4206
+2026-02-07 10:33:36,939 - AQI_PIPELINE - INFO - Train size: 3364, Test size: 842
+2026-02-07 10:33:36,957 - AQI_PIPELINE - INFO - Training RandomForest (multi-day)...
+2026-02-07 10:36:49,787 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 10:36:49,788 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:36:51,340 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:36:56,368 - AQI_PIPELINE - INFO - Feature rows loaded: 4206
+2026-02-07 10:36:56,403 - AQI_PIPELINE - INFO - Train size: 3364, Test size: 842
+2026-02-07 10:36:56,405 - AQI_PIPELINE - INFO - Training RandomForest (multi-day)...
+2026-02-07 10:40:18,991 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 10:40:18,991 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:40:21,203 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:40:29,843 - AQI_PIPELINE - INFO - Feature rows loaded: 4206
+2026-02-07 10:40:29,849 - AQI_PIPELINE - INFO - Train size: 3364, Test size: 842
+2026-02-07 10:40:29,865 - AQI_PIPELINE - INFO - Training RandomForest (multi-day)...
+2026-02-07 10:42:18,621 - AQI_PIPELINE - INFO - RandomForest evaluation: {'Day1_RMSE': np.float64(36.03833152109551), 'Day1_MAE': 19.11094685273159, 'Day1_R2': 0.12789632725017475, 'Day2_RMSE': np.float64(40.20326375591582), 'Day2_MAE': 23.72328188836104, 'Day2_R2': -0.042801634575210024, 'Day3_RMSE': np.float64(40.531181132032025), 'Day3_MAE': 24.16815760095012, 'Day3_R2': -0.04996448486890648}
+2026-02-07 10:42:18,623 - AQI_PIPELINE - INFO - Training XGBoost (multi-day)...
+2026-02-07 10:42:34,956 - AQI_PIPELINE - INFO - XGBoost evaluation: {'Day1_RMSE': np.float64(35.86609889811766), 'Day1_MAE': 19.250958932618346, 'Day1_R2': 0.13621223818577943, 'Day2_RMSE': np.float64(40.8317068997683), 'Day2_MAE': 24.61107897180843, 'Day2_R2': -0.07565785116336055, 'Day3_RMSE': np.float64(41.72709972045837), 'Day3_MAE': 24.491606295986585, 'Day3_R2': -0.11283938882296263}
+2026-02-07 10:42:34,957 - AQI_PIPELINE - INFO - Training Ridge (multi-day)...
+2026-02-07 10:45:51,782 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 10:45:51,782 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:45:54,642 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:46:12,417 - AQI_PIPELINE - INFO - Feature rows loaded: 4206
+2026-02-07 10:46:12,428 - AQI_PIPELINE - INFO - Train size: 3364, Test size: 842
+2026-02-07 10:46:12,445 - AQI_PIPELINE - INFO - Training RandomForest (multi-day)...
+2026-02-07 10:48:10,025 - AQI_PIPELINE - INFO - RandomForest evaluation: {'Day1_RMSE': np.float64(36.03833152109551), 'Day1_MAE': 19.110946852731594, 'Day1_R2': 0.12789632725017475, 'Day2_RMSE': np.float64(40.20326375591582), 'Day2_MAE': 23.723281888361043, 'Day2_R2': -0.042801634575210024, 'Day3_RMSE': np.float64(40.53118113203203), 'Day3_MAE': 24.16815760095012, 'Day3_R2': -0.04996448486890648}
+2026-02-07 10:48:10,027 - AQI_PIPELINE - INFO - Training XGBoost (multi-day)...
+2026-02-07 10:48:25,667 - AQI_PIPELINE - INFO - XGBoost evaluation: {'Day1_RMSE': np.float64(35.86609889811766), 'Day1_MAE': 19.250958932618346, 'Day1_R2': 0.13621223818577943, 'Day2_RMSE': np.float64(40.8317068997683), 'Day2_MAE': 24.61107897180843, 'Day2_R2': -0.07565785116336055, 'Day3_RMSE': np.float64(41.72709972045837), 'Day3_MAE': 24.491606295986585, 'Day3_R2': -0.11283938882296263}
+2026-02-07 10:48:25,668 - AQI_PIPELINE - INFO - Training Ridge (multi-day)...
+2026-02-07 10:48:25,960 - AQI_PIPELINE - INFO - Ridge evaluation: {'Day1_RMSE': np.float64(41.67962170526818), 'Day1_MAE': 24.761230806164672, 'Day1_R2': -0.1665041826979179, 'Day2_RMSE': np.float64(40.405392513108616), 'Day2_MAE': 24.815847953939773, 'Day2_R2': -0.0533137196812965, 'Day3_RMSE': np.float64(40.46860295050546), 'Day3_MAE': 25.778145446033047, 'Day3_R2': -0.04672479908975746}
+2026-02-07 10:48:25,961 - AQI_PIPELINE - INFO - Best multi-day model selected: RandomForest
+2026-02-07 10:48:26,959 - AQI_PIPELINE - INFO - Model saved in registry and local file: RandomForest_20260207_054826.pkl
+2026-02-07 10:51:32,914 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 10:51:32,915 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 10:51:35,903 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 10:51:45,564 - AQI_PIPELINE - INFO - Feature rows loaded after lag/rolling: 4125
+2026-02-07 10:51:45,767 - AQI_PIPELINE - INFO - Train size: 3300, Test size: 825
+2026-02-07 10:51:45,769 - AQI_PIPELINE - INFO - Training RandomForest (multi-day)...
+2026-02-07 11:01:44,840 - AQI_PIPELINE - INFO - RandomForest evaluation: {'Day1_RMSE': np.float64(36.26061450997245), 'Day1_MAE': 19.102274545454538, 'Day1_R2': 0.12926012042119261, 'Day2_RMSE': np.float64(40.812439641818386), 'Day2_MAE': 23.856863090909084, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(40.513980744588494), 'Day3_MAE': 22.56031315151514, 'Day3_R2': 0.0}
+2026-02-07 11:01:44,841 - AQI_PIPELINE - INFO - Training XGBoost (multi-day)...
+2026-02-07 11:02:57,802 - AQI_PIPELINE - INFO - XGBoost evaluation: {'Day1_RMSE': np.float64(36.04818611488528), 'Day1_MAE': 19.868185085227275, 'Day1_R2': 0.13943248323984114, 'Day2_RMSE': np.float64(40.50420105571422), 'Day2_MAE': 25.28487773659446, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(41.160876301977936), 'Day3_MAE': 24.500420377604165, 'Day3_R2': 0.0}
+2026-02-07 11:02:57,811 - AQI_PIPELINE - INFO - Training Ridge (multi-day)...
+2026-02-07 11:02:58,043 - AQI_PIPELINE - INFO - Ridge evaluation: {'Day1_RMSE': np.float64(52.17356054890643), 'Day1_MAE': 38.90897634537801, 'Day1_R2': 0.0, 'Day2_RMSE': np.float64(45.24448916486851), 'Day2_MAE': 30.86245312316768, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(47.04451679157495), 'Day3_MAE': 30.688566860818224, 'Day3_R2': 0.0}
+2026-02-07 11:02:58,045 - AQI_PIPELINE - INFO - Best multi-day model selected: RandomForest
+2026-02-07 11:02:59,044 - AQI_PIPELINE - INFO - Model saved in registry and local file: RandomForest_20260207_060258.pkl
+2026-02-07 11:04:42,214 - AQI_PIPELINE - INFO - Building CLEAN dataset from RAW (production-grade)...
+2026-02-07 11:04:42,214 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:04:44,489 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:04:48,505 - AQI_PIPELINE - INFO - RAW rows loaded: 4272
+2026-02-07 11:04:48,574 - AQI_PIPELINE - WARNING - Missing timestamps detected: 48 hours
+2026-02-07 11:04:48,603 - AQI_PIPELINE - INFO - CLEAN rows ready: 4320
+2026-02-07 11:10:58,669 - AQI_PIPELINE - INFO - Starting MULTI-DAY FEATURE ENGINEERING pipeline (CLEAN data)...
+2026-02-07 11:10:58,671 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:11:00,609 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:11:04,287 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4320
+2026-02-07 11:14:15,738 - AQI_PIPELINE - INFO - Running FEATURE DATASET sanity check...
+2026-02-07 11:14:15,738 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:14:17,934 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:28:27,999 - AQI_PIPELINE - INFO - Running FINAL FEATURE CLEANUP and sanity check...
+2026-02-07 11:28:28,000 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:28:30,705 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:28:40,363 - AQI_PIPELINE - INFO - Feature rows before cleanup: 4248
+2026-02-07 11:28:40,411 - AQI_PIPELINE - INFO - Feature rows after dropping NaN lags & targets: 4176
+2026-02-07 11:37:05,356 - AQI_PIPELINE - INFO - Running FINAL FEATURE CLEANUP and future-safe sanity check...
+2026-02-07 11:37:05,357 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:37:08,021 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:37:14,305 - AQI_PIPELINE - INFO - Feature rows loaded: 4176
+2026-02-07 11:37:26,575 - AQI_PIPELINE - INFO - Full feature dataset preserved in 'aqi_features_full' collection
+2026-02-07 11:37:26,595 - AQI_PIPELINE - INFO - Training-ready feature rows after dropping NaN lags & targets: 4176
+2026-02-07 11:41:57,519 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 11:41:57,519 - AQI_PIPELINE - INFO - Loading training-ready multi-day feature dataset from MongoDB...
+2026-02-07 11:41:57,520 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:42:00,233 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:42:20,610 - AQI_PIPELINE - INFO - Feature rows loaded: 4176
+2026-02-07 11:44:40,020 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 11:44:40,021 - AQI_PIPELINE - INFO - Loading training-ready multi-day feature dataset from MongoDB...
+2026-02-07 11:44:40,022 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:44:42,502 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:45:06,147 - AQI_PIPELINE - INFO - Feature rows loaded: 4176
+2026-02-07 11:45:06,197 - AQI_PIPELINE - INFO - Train size: 3340, Test size: 836
+2026-02-07 11:45:06,203 - AQI_PIPELINE - INFO - Training RandomForest (multi-day)...
+2026-02-07 11:47:00,757 - AQI_PIPELINE - INFO - RandomForest evaluation: {'Day1_RMSE': np.float64(36.44734168468725), 'Day1_MAE': 19.96368540669857, 'Day1_R2': 0.09500062489516492, 'Day2_RMSE': np.float64(39.07947597418415), 'Day2_MAE': 22.519523923444986, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(38.815280256648386), 'Day3_MAE': 21.857483851674633, 'Day3_R2': 0.0}
+2026-02-07 11:47:00,766 - AQI_PIPELINE - INFO - Training XGBoost (multi-day)...
+2026-02-07 11:47:16,367 - AQI_PIPELINE - INFO - XGBoost evaluation: {'Day1_RMSE': np.float64(37.799408570587225), 'Day1_MAE': 21.30329650586872, 'Day1_R2': 0.02661069022359308, 'Day2_RMSE': np.float64(39.24068612613329), 'Day2_MAE': 22.748424267928563, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(41.31927929744113), 'Day3_MAE': 24.966920466810894, 'Day3_R2': 0.0}
+2026-02-07 11:47:16,369 - AQI_PIPELINE - INFO - Training Ridge (multi-day)...
+2026-02-07 11:47:16,469 - AQI_PIPELINE - INFO - Ridge evaluation: {'Day1_RMSE': np.float64(46.87151183146833), 'Day1_MAE': 31.499876183819243, 'Day1_R2': 0.0, 'Day2_RMSE': np.float64(43.057252226294544), 'Day2_MAE': 26.014276753124726, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(40.25452517150067), 'Day3_MAE': 24.94426124774222, 'Day3_R2': 0.0}
+2026-02-07 11:47:16,471 - AQI_PIPELINE - INFO - Best multi-day model selected: RandomForest
+2026-02-07 11:51:27,722 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 11:51:27,723 - AQI_PIPELINE - INFO - Loading training-ready multi-day feature dataset from MongoDB...
+2026-02-07 11:51:27,725 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:51:30,827 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:51:52,399 - AQI_PIPELINE - INFO - Feature rows loaded: 4176
+2026-02-07 11:51:52,478 - AQI_PIPELINE - INFO - Train size: 3340, Test size: 836
+2026-02-07 11:54:02,292 - AQI_PIPELINE - INFO - Starting MULTI-DAY MODEL TRAINING pipeline...
+2026-02-07 11:54:02,293 - AQI_PIPELINE - INFO - Loading training-ready multi-day feature dataset from MongoDB...
+2026-02-07 11:54:02,293 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 11:54:05,860 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 11:54:15,529 - AQI_PIPELINE - INFO - Feature rows loaded: 4176
+2026-02-07 11:54:15,593 - AQI_PIPELINE - INFO - Train size: 3340, Test size: 836
+2026-02-07 11:54:15,594 - AQI_PIPELINE - INFO - Training RandomForest (multi-day)...
+2026-02-07 11:56:57,831 - AQI_PIPELINE - INFO - RandomForest evaluation: {'Day1_RMSE': np.float64(36.44734168468725), 'Day1_MAE': 19.96368540669857, 'Day1_R2': 0.09500062489516492, 'Day2_RMSE': np.float64(39.07947597418415), 'Day2_MAE': 22.51952392344499, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(38.81528025664839), 'Day3_MAE': 21.857483851674633, 'Day3_R2': 0.0}
+2026-02-07 11:56:57,840 - AQI_PIPELINE - INFO - Training XGBoost (multi-day)...
+2026-02-07 11:57:19,728 - AQI_PIPELINE - INFO - XGBoost evaluation: {'Day1_RMSE': np.float64(37.799408570587225), 'Day1_MAE': 21.30329650586872, 'Day1_R2': 0.02661069022359308, 'Day2_RMSE': np.float64(39.24068612613329), 'Day2_MAE': 22.748424267928563, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(41.31927929744113), 'Day3_MAE': 24.966920466810894, 'Day3_R2': 0.0}
+2026-02-07 11:57:19,731 - AQI_PIPELINE - INFO - Training Ridge (multi-day)...
+2026-02-07 11:57:19,860 - AQI_PIPELINE - INFO - Ridge evaluation: {'Day1_RMSE': np.float64(46.87151183146833), 'Day1_MAE': 31.499876183819243, 'Day1_R2': 0.0, 'Day2_RMSE': np.float64(43.057252226294544), 'Day2_MAE': 26.014276753124726, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(40.25452517150067), 'Day3_MAE': 24.94426124774222, 'Day3_R2': 0.0}
+2026-02-07 11:57:19,860 - AQI_PIPELINE - INFO - Training GradientBoosting (multi-day)...
+2026-02-07 11:59:51,012 - AQI_PIPELINE - INFO - GradientBoosting evaluation: {'Day1_RMSE': np.float64(36.31184280782512), 'Day1_MAE': 18.576565614838888, 'Day1_R2': 0.10171707945742303, 'Day2_RMSE': np.float64(39.00737324522826), 'Day2_MAE': 23.412014079766276, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(39.20941110937747), 'Day3_MAE': 23.754881252926285, 'Day3_R2': 0.0}
+2026-02-07 11:59:51,023 - AQI_PIPELINE - INFO - Training ExtraTrees (multi-day)...
+2026-02-07 12:00:37,362 - AQI_PIPELINE - INFO - ExtraTrees evaluation: {'Day1_RMSE': np.float64(37.139205380164135), 'Day1_MAE': 20.861325717703355, 'Day1_R2': 0.060316117569011785, 'Day2_RMSE': np.float64(39.08112638747982), 'Day2_MAE': 23.662245753588515, 'Day2_R2': 0.0, 'Day3_RMSE': np.float64(38.85029974469648), 'Day3_MAE': 23.786370574162675, 'Day3_R2': 0.0}
+2026-02-07 12:00:37,363 - AQI_PIPELINE - INFO - Best multi-day model selected: RandomForest
+2026-02-07 12:00:39,846 - AQI_PIPELINE - INFO - Model saved in registry and local file: model_registry/RandomForest_20260207_070038.pkl
+2026-02-07 12:12:28,576 - AQI_PIPELINE - INFO - Running IMPROVED MULTI-DAY FEATURE PIPELINE...
+2026-02-07 12:12:28,577 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 12:12:30,813 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 12:14:42,250 - AQI_PIPELINE - INFO - Running IMPROVED MULTI-DAY FEATURE PIPELINE...
+2026-02-07 12:14:42,252 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 12:14:44,351 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 12:16:23,762 - AQI_PIPELINE - INFO - Running IMPROVED MULTI-DAY FEATURE PIPELINE...
+2026-02-07 12:16:23,763 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 12:16:25,545 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 12:19:00,916 - AQI_PIPELINE - INFO - Running IMPROVED MULTI-DAY FEATURE PIPELINE...
+2026-02-07 12:19:00,917 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 12:19:03,302 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 12:21:42,656 - AQI_PIPELINE - INFO - Running ADVANCED MULTI-DAY FEATURE PIPELINE...
+2026-02-07 12:21:42,657 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 12:21:44,873 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 14:55:55,073 - AQI_PIPELINE - INFO - Starting FEATURE VALIDATION & CLEANING pipeline...
+2026-02-07 14:55:55,074 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 14:55:57,744 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 14:56:00,854 - AQI_PIPELINE - INFO - Feature rows loaded: 4248
+2026-02-07 15:02:28,799 - AQI_PIPELINE - INFO - Fetching cleaned features from MongoDB...
+2026-02-07 15:02:28,800 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:02:31,106 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:02:34,592 - AQI_PIPELINE - INFO - Feature rows: 4248, columns: 47
+2026-02-07 15:04:04,447 - AQI_PIPELINE - INFO - Fetching cleaned features from MongoDB...
+2026-02-07 15:04:04,447 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:04:06,425 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:04:11,221 - AQI_PIPELINE - INFO - Feature rows: 4248, columns: 47
+2026-02-07 15:04:11,261 - AQI_PIPELINE - INFO - Training data shape: X=(3398, 41), y=(3398, 3)
+2026-02-07 15:04:11,265 - AQI_PIPELINE - INFO - Training multi-target RandomForest model...
+2026-02-07 15:05:41,906 - AQI_PIPELINE - INFO - Multi-target Model RMSE: 38.90, R2: -0.0275
+2026-02-07 15:05:42,014 - AQI_PIPELINE - INFO - Saved model MultiTarget_RF to models/MultiTarget_RF.pkl
+2026-02-07 15:05:42,239 - AQI_PIPELINE - INFO - Registered MultiTarget_RF in MongoDB
+2026-02-07 15:06:42,811 - AQI_PIPELINE - INFO - Fetching cleaned features from MongoDB...
+2026-02-07 15:06:42,811 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:06:44,743 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:06:49,876 - AQI_PIPELINE - INFO - Feature rows: 4248, columns: 47
+2026-02-07 15:06:49,888 - AQI_PIPELINE - INFO - 
+Training models for target_day_1...
+2026-02-07 15:06:49,905 - AQI_PIPELINE - INFO - Data shapes: X_train=(3398, 43), y_train=(3398,)
+2026-02-07 15:07:21,521 - AQI_PIPELINE - INFO - RandomForest for target_day_1 -> RMSE: 33.78, R2: 0.2140
+2026-02-07 15:08:41,257 - AQI_PIPELINE - INFO - Fetching cleaned features from MongoDB...
+2026-02-07 15:08:41,257 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:08:42,954 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:08:47,360 - AQI_PIPELINE - INFO - Feature rows: 4248, columns: 47
+2026-02-07 15:08:47,375 - AQI_PIPELINE - INFO - 
+Training & predicting for target_day_1...
+2026-02-07 15:08:47,392 - AQI_PIPELINE - INFO - Data shapes: X_train=(3398, 43), y_train=(3398,)
+2026-02-07 15:09:21,656 - AQI_PIPELINE - INFO - RandomForest -> RMSE: 33.78, R2: 0.2140
+2026-02-07 15:09:21,717 - AQI_PIPELINE - INFO - Saved model target_day_1_RandomForest to models/target_day_1_RandomForest.pkl
+2026-02-07 15:09:21,870 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_1 in MongoDB
+2026-02-07 15:10:18,856 - AQI_PIPELINE - INFO - Fetching cleaned features from MongoDB...
+2026-02-07 15:10:18,857 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:10:20,514 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:10:31,971 - AQI_PIPELINE - INFO - Feature rows: 4248, columns: 47
+2026-02-07 15:10:32,000 - AQI_PIPELINE - INFO - 
+Training models for target_day_1...
+2026-02-07 15:10:32,059 - AQI_PIPELINE - INFO - Data shapes: X_train=(3398, 43), y_train=(3398,)
+2026-02-07 15:11:08,215 - AQI_PIPELINE - INFO - RandomForest for target_day_1 -> RMSE: 33.93, R2: 0.2071
+2026-02-07 15:15:03,580 - AQI_PIPELINE - INFO - Fetching cleaned features from MongoDB...
+2026-02-07 15:15:03,581 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:15:05,677 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:15:11,138 - AQI_PIPELINE - INFO - Feature rows: 4248, columns: 47
+2026-02-07 15:15:11,166 - AQI_PIPELINE - INFO - Dropping columns with 100% NaN: ['temp_inversion_proxy']
+2026-02-07 15:15:11,232 - AQI_PIPELINE - INFO - 
+Training models for target_day_1...
+2026-02-07 15:15:11,240 - AQI_PIPELINE - INFO - Data shapes: X_train=(3398, 42), y_train=(3398,)
+2026-02-07 15:15:47,216 - AQI_PIPELINE - INFO - RandomForest for target_day_1 -> RMSE: 34.01, R2: 0.2033
+2026-02-07 15:15:47,276 - AQI_PIPELINE - INFO - Ridge for target_day_1 -> RMSE: 62.26, R2: -1.6695
+2026-02-07 15:15:49,661 - AQI_PIPELINE - INFO - XGBoost for target_day_1 -> RMSE: 33.27, R2: 0.2377
+2026-02-07 15:15:49,680 - AQI_PIPELINE - INFO - Saved model target_day_1_XGBoost to models/target_day_1_XGBoost.pkl
+2026-02-07 15:15:49,841 - AQI_PIPELINE - INFO - Registered XGBoost for target_day_1 in MongoDB
+2026-02-07 15:15:49,841 - AQI_PIPELINE - INFO - 
+Training models for target_day_2...
+2026-02-07 15:15:49,841 - AQI_PIPELINE - INFO - Data shapes: X_train=(3398, 42), y_train=(3398,)
+2026-02-07 15:16:22,419 - AQI_PIPELINE - INFO - RandomForest for target_day_2 -> RMSE: 35.81, R2: 0.1573
+2026-02-07 15:16:22,518 - AQI_PIPELINE - INFO - Ridge for target_day_2 -> RMSE: 111.50, R2: -7.1693
+2026-02-07 15:16:24,501 - AQI_PIPELINE - INFO - XGBoost for target_day_2 -> RMSE: 37.65, R2: 0.0688
+2026-02-07 15:16:24,560 - AQI_PIPELINE - INFO - Saved model target_day_2_RandomForest to models/target_day_2_RandomForest.pkl
+2026-02-07 15:16:24,651 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_2 in MongoDB
+2026-02-07 15:16:24,656 - AQI_PIPELINE - INFO - 
+Training models for target_day_3...
+2026-02-07 15:16:24,659 - AQI_PIPELINE - INFO - Data shapes: X_train=(3398, 42), y_train=(3398,)
+2026-02-07 15:16:48,755 - AQI_PIPELINE - INFO - RandomForest for target_day_3 -> RMSE: 35.82, R2: 0.1083
+2026-02-07 15:16:48,768 - AQI_PIPELINE - INFO - Ridge for target_day_3 -> RMSE: 274.65, R2: -51.4161
+2026-02-07 15:16:50,872 - AQI_PIPELINE - INFO - XGBoost for target_day_3 -> RMSE: 38.16, R2: -0.0117
+2026-02-07 15:16:50,921 - AQI_PIPELINE - INFO - Saved model target_day_3_RandomForest to models/target_day_3_RandomForest.pkl
+2026-02-07 15:16:51,336 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_3 in MongoDB
+2026-02-07 15:22:26,686 - AQI_PIPELINE - INFO - Fetching cleaned features from MongoDB...
+2026-02-07 15:22:26,687 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:22:28,324 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:22:31,613 - AQI_PIPELINE - INFO - Feature rows: 4248, columns: 47
+2026-02-07 15:22:31,666 - AQI_PIPELINE - INFO - Dropping columns with 100% NaN: ['temp_inversion_proxy']
+2026-02-07 15:22:31,673 - AQI_PIPELINE - INFO - Total numeric columns: 43
+2026-02-07 15:22:31,673 - AQI_PIPELINE - INFO - Using feature columns: 40 (targets removed)
+2026-02-07 15:22:31,750 - AQI_PIPELINE - INFO - Saved: models/median_imputer_v2.pkl
+2026-02-07 15:22:31,752 - AQI_PIPELINE - INFO - 
+==============================
+2026-02-07 15:22:31,753 - AQI_PIPELINE - INFO - Training models for target_day_1...
+2026-02-07 15:22:31,754 - AQI_PIPELINE - INFO - ==============================
+2026-02-07 15:22:31,770 - AQI_PIPELINE - INFO - Train: (2888, 40), Val: (510, 40), Test: (850, 40)
+2026-02-07 15:23:10,121 - AQI_PIPELINE - INFO - RandomForest for target_day_1 -> RMSE: 36.78, R2: 0.0684
+2026-02-07 15:23:10,168 - AQI_PIPELINE - INFO - Ridge for target_day_1 -> RMSE: 72.28, R2: -2.5980
+2026-02-07 15:23:26,213 - AQI_PIPELINE - INFO - XGBoost for target_day_1 -> RMSE: 39.68, R2: -0.0846
+2026-02-07 15:23:26,414 - AQI_PIPELINE - INFO - Saved: models/target_day_1_RandomForest_v2.pkl
+2026-02-07 15:23:26,527 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_1 in MongoDB
+2026-02-07 15:23:26,528 - AQI_PIPELINE - INFO - 
+==============================
+2026-02-07 15:23:26,529 - AQI_PIPELINE - INFO - Training models for target_day_2...
+2026-02-07 15:23:26,529 - AQI_PIPELINE - INFO - ==============================
+2026-02-07 15:23:26,539 - AQI_PIPELINE - INFO - Train: (2888, 40), Val: (510, 40), Test: (850, 40)
+2026-02-07 15:23:59,719 - AQI_PIPELINE - INFO - RandomForest for target_day_2 -> RMSE: 40.68, R2: -0.0872
+2026-02-07 15:23:59,739 - AQI_PIPELINE - INFO - Ridge for target_day_2 -> RMSE: 114.48, R2: -7.6115
+2026-02-07 15:24:18,007 - AQI_PIPELINE - INFO - XGBoost for target_day_2 -> RMSE: 40.24, R2: -0.0637
+2026-02-07 15:24:18,127 - AQI_PIPELINE - INFO - Saved: models/target_day_2_XGBoost_v2.pkl
+2026-02-07 15:24:18,229 - AQI_PIPELINE - INFO - Registered XGBoost for target_day_2 in MongoDB
+2026-02-07 15:24:18,230 - AQI_PIPELINE - INFO - 
+==============================
+2026-02-07 15:24:18,231 - AQI_PIPELINE - INFO - Training models for target_day_3...
+2026-02-07 15:24:18,232 - AQI_PIPELINE - INFO - ==============================
+2026-02-07 15:24:18,243 - AQI_PIPELINE - INFO - Train: (2888, 40), Val: (510, 40), Test: (850, 40)
+2026-02-07 15:24:51,146 - AQI_PIPELINE - INFO - RandomForest for target_day_3 -> RMSE: 38.79, R2: -0.0456
+2026-02-07 15:24:51,185 - AQI_PIPELINE - INFO - Ridge for target_day_3 -> RMSE: 153.42, R2: -15.3547
+2026-02-07 15:25:11,297 - AQI_PIPELINE - INFO - XGBoost for target_day_3 -> RMSE: 41.04, R2: -0.1702
+2026-02-07 15:25:11,531 - AQI_PIPELINE - INFO - Saved: models/target_day_3_RandomForest_v2.pkl
+2026-02-07 15:25:11,624 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_3 in MongoDB
+2026-02-07 15:31:44,738 - AQI_PIPELINE - INFO - Running MULTI-DAY FEATURE PIPELINE (v2 improved)...
+2026-02-07 15:31:44,739 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:31:46,142 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:34:05,624 - AQI_PIPELINE - INFO - Starting FEATURE VALIDATION & CLEANING pipeline (v2)...
+2026-02-07 15:34:05,624 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:34:06,950 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:34:11,637 - AQI_PIPELINE - INFO - Feature rows loaded: 4248
+2026-02-07 15:34:11,723 - AQI_PIPELINE - INFO - Dropping columns with 100% NaN: ['temp_inversion_proxy']
+2026-02-07 15:34:24,811 - AQI_PIPELINE - INFO - Feature validation & cleaning completed successfully (v2).
+2026-02-07 15:38:20,335 - AQI_PIPELINE - INFO - Fetching CLEANED features from MongoDB...
+2026-02-07 15:38:20,336 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:38:22,227 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:38:25,572 - AQI_PIPELINE - INFO - Clean feature rows: 4248, columns: 50
+2026-02-07 15:38:25,603 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:38:25,604 - AQI_PIPELINE - INFO - Training models for: target_day_1
+2026-02-07 15:38:25,604 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:38:25,615 - AQI_PIPELINE - INFO - Final feature count for target_day_1: 41
+2026-02-07 15:38:25,616 - AQI_PIPELINE - INFO - Train: (2973, 41), Val: (425, 41), Test: (850, 41)
+2026-02-07 15:38:25,664 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_1_median_imputer.pkl
+2026-02-07 15:38:43,313 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 33.92, MAE: 24.72, R2: -0.0620
+2026-02-07 15:38:43,343 - AQI_PIPELINE - INFO - Ridge VAL -> RMSE: 37.60, MAE: 29.60, R2: -0.3054
+2026-02-07 15:38:49,841 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 43.45, MAE: 31.81, R2: -0.7429
+2026-02-07 15:38:50,017 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_1: RandomForest
+2026-02-07 15:38:50,019 - AQI_PIPELINE - INFO - TEST -> RMSE: 37.80, MAE: 20.97, R2: 0.0161
+2026-02-07 15:38:50,142 - AQI_PIPELINE - INFO - Saved model: models\target_day_1_RandomForest_FINAL.pkl
+2026-02-07 15:38:50,242 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_1 in MongoDB.
+2026-02-07 15:38:50,246 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:38:50,248 - AQI_PIPELINE - INFO - Training models for: target_day_2
+2026-02-07 15:38:50,249 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:38:50,263 - AQI_PIPELINE - INFO - Final feature count for target_day_2: 41
+2026-02-07 15:38:50,272 - AQI_PIPELINE - INFO - Train: (2973, 41), Val: (425, 41), Test: (850, 41)
+2026-02-07 15:38:50,380 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_2_median_imputer.pkl
+2026-02-07 15:39:08,240 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 39.99, MAE: 31.13, R2: -0.6291
+2026-02-07 15:39:08,248 - AQI_PIPELINE - INFO - Ridge VAL -> RMSE: 34.04, MAE: 25.67, R2: -0.1803
+2026-02-07 15:39:14,486 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 39.26, MAE: 28.95, R2: -0.5700
+2026-02-07 15:39:14,492 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_2: Ridge
+2026-02-07 15:39:14,493 - AQI_PIPELINE - INFO - TEST -> RMSE: 299.11, MAE: 285.56, R2: -57.7830
+2026-02-07 15:39:14,494 - AQI_PIPELINE - INFO - Saved model: models\target_day_2_Ridge_FINAL.pkl
+2026-02-07 15:39:14,586 - AQI_PIPELINE - INFO - Registered Ridge for target_day_2 in MongoDB.
+2026-02-07 15:39:14,587 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:39:14,587 - AQI_PIPELINE - INFO - Training models for: target_day_3
+2026-02-07 15:39:14,588 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:39:14,597 - AQI_PIPELINE - INFO - Final feature count for target_day_3: 41
+2026-02-07 15:39:14,600 - AQI_PIPELINE - INFO - Train: (2973, 41), Val: (425, 41), Test: (850, 41)
+2026-02-07 15:39:14,644 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_3_median_imputer.pkl
+2026-02-07 15:39:39,792 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 36.34, MAE: 24.70, R2: -0.1833
+2026-02-07 15:39:39,800 - AQI_PIPELINE - INFO - Ridge VAL -> RMSE: 39.97, MAE: 30.72, R2: -0.4314
+2026-02-07 15:39:50,876 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 37.89, MAE: 26.65, R2: -0.2864
+2026-02-07 15:39:51,112 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_3: RandomForest
+2026-02-07 15:39:51,113 - AQI_PIPELINE - INFO - TEST -> RMSE: 40.29, MAE: 23.81, R2: -0.1282
+2026-02-07 15:39:51,244 - AQI_PIPELINE - INFO - Saved model: models\target_day_3_RandomForest_FINAL.pkl
+2026-02-07 15:39:51,502 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_3 in MongoDB.
+2026-02-07 15:40:45,989 - AQI_PIPELINE - INFO - Fetching CLEANED features from MongoDB...
+2026-02-07 15:40:45,989 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:40:47,369 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:40:51,457 - AQI_PIPELINE - INFO - Clean feature rows: 4248, columns: 50
+2026-02-07 15:40:51,518 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:40:51,522 - AQI_PIPELINE - INFO - Training models for: target_day_1
+2026-02-07 15:40:51,523 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:40:51,532 - AQI_PIPELINE - INFO - Final feature count for target_day_1: 41
+2026-02-07 15:40:51,534 - AQI_PIPELINE - INFO - Train: (2973, 41), Val: (425, 41), Test: (850, 41)
+2026-02-07 15:40:51,577 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_1_median_imputer.pkl
+2026-02-07 15:41:16,720 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 33.92, MAE: 24.72, R2: -0.0620
+2026-02-07 15:41:16,738 - AQI_PIPELINE - INFO - Ridge VAL -> RMSE: 37.60, MAE: 29.60, R2: -0.3054
+2026-02-07 15:41:25,269 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 43.45, MAE: 31.81, R2: -0.7429
+2026-02-07 15:41:25,469 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_1: RandomForest
+2026-02-07 15:41:25,470 - AQI_PIPELINE - INFO - TEST -> RMSE: 37.80, MAE: 20.97, R2: 0.0161
+2026-02-07 15:41:25,584 - AQI_PIPELINE - INFO - Saved model: models\target_day_1_RandomForest_FINAL.pkl
+2026-02-07 15:41:25,724 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_1 in MongoDB.
+2026-02-07 15:41:25,725 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:41:25,726 - AQI_PIPELINE - INFO - Training models for: target_day_2
+2026-02-07 15:41:25,727 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:41:25,736 - AQI_PIPELINE - INFO - Final feature count for target_day_2: 41
+2026-02-07 15:41:25,742 - AQI_PIPELINE - INFO - Train: (2973, 41), Val: (425, 41), Test: (850, 41)
+2026-02-07 15:41:25,791 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_2_median_imputer.pkl
+2026-02-07 15:41:53,659 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 39.99, MAE: 31.13, R2: -0.6291
+2026-02-07 15:41:53,714 - AQI_PIPELINE - INFO - Ridge VAL -> RMSE: 34.04, MAE: 25.67, R2: -0.1803
+2026-02-07 15:42:02,143 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 39.26, MAE: 28.95, R2: -0.5700
+2026-02-07 15:42:02,154 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_2: Ridge
+2026-02-07 15:42:02,157 - AQI_PIPELINE - INFO - TEST -> RMSE: 299.11, MAE: 285.56, R2: -57.7830
+2026-02-07 15:42:02,158 - AQI_PIPELINE - INFO - Saved model: models\target_day_2_Ridge_FINAL.pkl
+2026-02-07 15:42:02,262 - AQI_PIPELINE - INFO - Registered Ridge for target_day_2 in MongoDB.
+2026-02-07 15:42:02,262 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:42:02,263 - AQI_PIPELINE - INFO - Training models for: target_day_3
+2026-02-07 15:42:02,263 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:42:02,273 - AQI_PIPELINE - INFO - Final feature count for target_day_3: 41
+2026-02-07 15:42:02,274 - AQI_PIPELINE - INFO - Train: (2973, 41), Val: (425, 41), Test: (850, 41)
+2026-02-07 15:42:02,315 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_3_median_imputer.pkl
+2026-02-07 15:42:31,203 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 36.34, MAE: 24.70, R2: -0.1833
+2026-02-07 15:42:31,219 - AQI_PIPELINE - INFO - Ridge VAL -> RMSE: 39.97, MAE: 30.72, R2: -0.4314
+2026-02-07 15:42:42,932 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 37.89, MAE: 26.65, R2: -0.2864
+2026-02-07 15:42:43,162 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_3: RandomForest
+2026-02-07 15:42:43,163 - AQI_PIPELINE - INFO - TEST -> RMSE: 40.29, MAE: 23.81, R2: -0.1282
+2026-02-07 15:42:43,299 - AQI_PIPELINE - INFO - Saved model: models\target_day_3_RandomForest_FINAL.pkl
+2026-02-07 15:42:43,413 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_3 in MongoDB.
+2026-02-07 15:44:55,286 - AQI_PIPELINE - INFO - Starting FEATURE VALIDATION & CLEANING pipeline (v3)...
+2026-02-07 15:44:55,286 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:44:56,827 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:45:00,280 - AQI_PIPELINE - INFO - Feature rows loaded: 4248
+2026-02-07 15:45:00,378 - AQI_PIPELINE - INFO - Dropping columns with 100% NaN: ['temp_inversion_proxy']
+2026-02-07 15:45:09,245 - AQI_PIPELINE - INFO - Feature validation & cleaning completed successfully (v3).
+2026-02-07 15:49:02,609 - AQI_PIPELINE - INFO - Fetching CLEANED features from MongoDB...
+2026-02-07 15:49:02,610 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 15:49:04,240 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 15:49:12,576 - AQI_PIPELINE - INFO - Clean feature rows: 4200, columns: 50
+2026-02-07 15:49:12,604 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:49:12,606 - AQI_PIPELINE - INFO - Training models for: target_day_1
+2026-02-07 15:49:12,608 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:49:12,625 - AQI_PIPELINE - INFO - Final feature count for target_day_1: 41
+2026-02-07 15:49:12,626 - AQI_PIPELINE - INFO - Train: (2940, 41), Val: (420, 41), Test: (840, 41)
+2026-02-07 15:49:12,661 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_1_median_imputer.pkl
+2026-02-07 15:49:29,370 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 35.94, MAE: 26.34, R2: -0.0934
+2026-02-07 15:49:29,382 - AQI_PIPELINE - INFO - Ridge VAL -> RMSE: 35.73, MAE: 26.94, R2: -0.0806
+2026-02-07 15:49:34,956 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 43.60, MAE: 32.70, R2: -0.6089
+2026-02-07 15:49:34,961 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_1: Ridge
+2026-02-07 15:49:34,961 - AQI_PIPELINE - INFO - TEST -> RMSE: 95.25, MAE: 84.09, R2: -5.1834
+2026-02-07 15:49:34,964 - AQI_PIPELINE - INFO - Saved model: models\target_day_1_Ridge_FINAL.pkl
+2026-02-07 15:49:35,066 - AQI_PIPELINE - INFO - Registered Ridge for target_day_1 in MongoDB.
+2026-02-07 15:49:35,067 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:49:35,067 - AQI_PIPELINE - INFO - Training models for: target_day_2
+2026-02-07 15:49:35,068 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:49:35,082 - AQI_PIPELINE - INFO - Final feature count for target_day_2: 41
+2026-02-07 15:49:35,084 - AQI_PIPELINE - INFO - Train: (2940, 41), Val: (420, 41), Test: (840, 41)
+2026-02-07 15:49:35,124 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_2_median_imputer.pkl
+2026-02-07 15:49:54,241 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 41.17, MAE: 31.09, R2: -0.4620
+2026-02-07 15:50:01,312 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 43.28, MAE: 33.60, R2: -0.6161
+2026-02-07 15:50:01,528 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_2: RandomForest
+2026-02-07 15:50:01,531 - AQI_PIPELINE - INFO - TEST -> RMSE: 40.68, MAE: 24.38, R2: -0.0855
+2026-02-07 15:50:01,774 - AQI_PIPELINE - INFO - Saved model: models\target_day_2_RandomForest_FINAL.pkl
+2026-02-07 15:50:01,961 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_2 in MongoDB.
+2026-02-07 15:50:01,961 - AQI_PIPELINE - INFO - 
+====================================
+2026-02-07 15:50:01,963 - AQI_PIPELINE - INFO - Training models for: target_day_3
+2026-02-07 15:50:01,964 - AQI_PIPELINE - INFO - ====================================
+2026-02-07 15:50:01,988 - AQI_PIPELINE - INFO - Final feature count for target_day_3: 41
+2026-02-07 15:50:01,991 - AQI_PIPELINE - INFO - Train: (2940, 41), Val: (420, 41), Test: (840, 41)
+2026-02-07 15:50:02,042 - AQI_PIPELINE - INFO - Saved imputer: models\target_day_3_median_imputer.pkl
+2026-02-07 15:50:35,507 - AQI_PIPELINE - INFO - RandomForest VAL -> RMSE: 36.35, MAE: 25.91, R2: -0.2688
+2026-02-07 15:50:46,341 - AQI_PIPELINE - INFO - XGBoost VAL -> RMSE: 36.42, MAE: 26.70, R2: -0.2738
+2026-02-07 15:50:46,610 - AQI_PIPELINE - INFO - 
+BEST MODEL for target_day_3: RandomForest
+2026-02-07 15:50:46,611 - AQI_PIPELINE - INFO - TEST -> RMSE: 41.68, MAE: 24.49, R2: -0.1221
+2026-02-07 15:50:46,779 - AQI_PIPELINE - INFO - Saved model: models\target_day_3_RandomForest_FINAL.pkl
+2026-02-07 15:50:47,615 - AQI_PIPELINE - INFO - Registered RandomForest for target_day_3 in MongoDB.
+2026-02-07 16:01:49,716 - AQI_PIPELINE - INFO - Running SAFE MULTI-DAY FEATURE PIPELINE
+2026-02-07 16:01:49,717 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 16:01:56,328 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 16:02:15,140 - AQI_PIPELINE - INFO - Feature store ready | rows=4248 cols=51
+2026-02-07 16:06:25,088 - AQI_PIPELINE - INFO - Starting FEATURE CLEANING PIPELINE
+2026-02-07 16:06:25,092 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 16:06:26,666 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 16:06:32,907 - AQI_PIPELINE - INFO - Rows after target check: 4248
+2026-02-07 16:06:48,855 - AQI_PIPELINE - INFO - FEATURE CLEANING COMPLETE
+2026-02-07 16:06:48,855 - AQI_PIPELINE - INFO - Final rows: 4248
+2026-02-07 16:06:48,863 - AQI_PIPELINE - INFO - Final columns: 48
+2026-02-07 16:09:16,727 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 16:09:18,262 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 16:09:25,014 - AQI_PIPELINE - INFO - Loaded cleaned features: (4248, 48)
+2026-02-07 16:09:25,037 - AQI_PIPELINE - INFO - 
+Training for target_day_1
+2026-02-07 16:09:28,958 - AQI_PIPELINE - INFO - target_day_1 TEST -> RMSE 38.19, R2 0.101
+2026-02-07 16:09:29,129 - AQI_PIPELINE - INFO - 
+Training for target_day_2
+2026-02-07 16:09:32,865 - AQI_PIPELINE - INFO - target_day_2 TEST -> RMSE 41.97, R2 -0.021
+2026-02-07 16:09:33,071 - AQI_PIPELINE - INFO - 
+Training for target_day_3
+2026-02-07 16:09:36,999 - AQI_PIPELINE - INFO - target_day_3 TEST -> RMSE 46.05, R2 -0.206
+2026-02-07 18:39:49,706 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-07 18:39:49,709 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 18:39:51,708 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 18:40:08,476 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | ROWS=4176 | COLS=59 ==========
+2026-02-07 18:45:22,801 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED ==========
+2026-02-07 18:45:22,801 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 18:45:24,669 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 18:45:27,590 - AQI_PIPELINE - WARNING - 48 completely missing hours detected
+2026-02-07 18:45:27,617 - AQI_PIPELINE - INFO - Rows after target filtering: 4176
+2026-02-07 18:45:45,887 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE ==========
+2026-02-07 18:45:45,887 - AQI_PIPELINE - INFO - Final rows: 4176
+2026-02-07 18:45:45,887 - AQI_PIPELINE - INFO - Final columns: 61
+2026-02-07 18:47:08,680 - AQI_PIPELINE - INFO - ========== TRAINING PIPELINE STARTED ==========
+2026-02-07 18:47:08,681 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 18:47:10,513 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 18:47:14,929 - AQI_PIPELINE - INFO - Loaded rows: 4176
+2026-02-07 18:47:14,930 - AQI_PIPELINE - INFO - 
+===== TRAINING FOR target_6h =====
+2026-02-07 18:47:14,940 - AQI_PIPELINE - INFO - Features used: 50
+2026-02-07 18:47:14,947 - AQI_PIPELINE - INFO - Baseline RMSE: 26.37
+2026-02-07 18:47:14,993 - AQI_PIPELINE - INFO - Training ridge
+2026-02-07 18:47:15,024 - AQI_PIPELINE - INFO - ridge | RMSE=51.05 | MAE=39.12 | R2=-0.480
+2026-02-07 18:47:15,027 - AQI_PIPELINE - INFO - Training rf
+2026-02-07 18:47:26,525 - AQI_PIPELINE - INFO - rf | RMSE=34.35 | MAE=17.41 | R2=0.330
+2026-02-07 18:47:26,526 - AQI_PIPELINE - INFO - Training xgb
+2026-02-07 18:47:30,682 - AQI_PIPELINE - INFO - xgb | RMSE=36.25 | MAE=22.73 | R2=0.254
+2026-02-07 18:47:30,893 - AQI_PIPELINE - INFO - BEST MODEL for target_6h: rf
+2026-02-07 18:47:30,893 - AQI_PIPELINE - INFO - 
+===== TRAINING FOR target_12h =====
+2026-02-07 18:47:30,906 - AQI_PIPELINE - INFO - Features used: 50
+2026-02-07 18:47:30,909 - AQI_PIPELINE - INFO - Baseline RMSE: 26.42
+2026-02-07 18:47:30,952 - AQI_PIPELINE - INFO - Training ridge
+2026-02-07 18:47:30,965 - AQI_PIPELINE - INFO - ridge | RMSE=64.84 | MAE=52.64 | R2=-1.374
+2026-02-07 18:47:30,965 - AQI_PIPELINE - INFO - Training rf
+2026-02-07 18:47:43,200 - AQI_PIPELINE - INFO - rf | RMSE=41.32 | MAE=22.23 | R2=0.036
+2026-02-07 18:47:43,200 - AQI_PIPELINE - INFO - Training xgb
+2026-02-07 18:47:48,258 - AQI_PIPELINE - INFO - xgb | RMSE=39.49 | MAE=24.11 | R2=0.120
+2026-02-07 18:47:48,496 - AQI_PIPELINE - INFO - BEST MODEL for target_12h: xgb
+2026-02-07 18:47:48,500 - AQI_PIPELINE - INFO - 
+===== TRAINING FOR target_24h =====
+2026-02-07 18:47:48,513 - AQI_PIPELINE - INFO - Features used: 50
+2026-02-07 18:47:48,517 - AQI_PIPELINE - INFO - Baseline RMSE: 26.39
+2026-02-07 18:47:48,560 - AQI_PIPELINE - INFO - Training ridge
+2026-02-07 18:47:48,575 - AQI_PIPELINE - INFO - ridge | RMSE=109.66 | MAE=100.88 | R2=-5.785
+2026-02-07 18:47:48,576 - AQI_PIPELINE - INFO - Training rf
+2026-02-07 18:48:04,122 - AQI_PIPELINE - INFO - rf | RMSE=38.24 | MAE=20.24 | R2=0.175
+2026-02-07 18:48:04,122 - AQI_PIPELINE - INFO - Training xgb
+2026-02-07 18:48:08,950 - AQI_PIPELINE - INFO - xgb | RMSE=38.05 | MAE=23.79 | R2=0.183
+2026-02-07 18:48:09,184 - AQI_PIPELINE - INFO - BEST MODEL for target_24h: xgb
+2026-02-07 18:48:09,185 - AQI_PIPELINE - INFO - ========== TRAINING PIPELINE COMPLETED ==========
+2026-02-07 18:49:40,183 - AQI_PIPELINE - INFO - ========== TRAINING PIPELINE STARTED ==========
+2026-02-07 18:49:40,184 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 18:49:42,366 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 18:49:46,191 - AQI_PIPELINE - INFO - Loaded rows: 4176
+2026-02-07 18:49:46,192 - AQI_PIPELINE - WARNING - Skipping target_day_1 (not found)
+2026-02-07 18:49:46,192 - AQI_PIPELINE - WARNING - Skipping target_day_2 (not found)
+2026-02-07 18:49:46,192 - AQI_PIPELINE - WARNING - Skipping target_day_3 (not found)
+2026-02-07 18:49:46,192 - AQI_PIPELINE - INFO - ========== TRAINING PIPELINE COMPLETED ==========
+2026-02-07 20:30:44,756 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED (CASE B HYBRID) ==========
+2026-02-07 20:30:44,757 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 20:30:46,365 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 20:30:47,795 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4320
+2026-02-07 20:30:49,143 - AQI_PIPELINE - INFO - Dropping old FEATURE_COLLECTION and inserting fresh dataset...
+2026-02-07 20:31:07,897 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED (CASE B) | ROWS=4128 | COLS=107 ==========
+2026-02-07 20:31:08,386 - AQI_PIPELINE - INFO - Sample feature keys: ['timestamp', 'city', 'co', 'humidity', 'ingested_at', 'no2', 'o3', 'pm10', 'pm2_5', 'precipitation', 'pressure', 'so2', 'source', 'temperature', 'wind_direction', 'wind_speed', 'aqi', 'hour', 'day_of_week', 'month'] ...
+2026-02-07 20:58:34,827 - AQI_PIPELINE - INFO - Starting AQI historical backfill pipeline...
+2026-02-07 20:58:34,827 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 20:58:36,761 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 20:58:36,761 - AQI_PIPELINE - INFO - Backfill window: 2025-08-11 -> 2026-02-07
+2026-02-07 20:58:36,761 - AQI_PIPELINE - INFO - Fetching Air Pollution historical data...
+2026-02-07 20:59:13,354 - AQI_PIPELINE - INFO - Starting AQI historical backfill pipeline...
+2026-02-07 20:59:13,354 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 20:59:15,189 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 20:59:15,190 - AQI_PIPELINE - INFO - Backfill window: 2025-08-11 -> 2026-02-07
+2026-02-07 20:59:15,191 - AQI_PIPELINE - INFO - Fetching Air Pollution historical data...
+2026-02-07 20:59:21,945 - AQI_PIPELINE - INFO - AQI rows fetched: 4272
+2026-02-07 20:59:21,962 - AQI_PIPELINE - INFO - Fetching Weather historical data...
+2026-02-07 20:59:24,178 - AQI_PIPELINE - INFO - Weather rows fetched: 4344
+2026-02-07 20:59:24,178 - AQI_PIPELINE - INFO - Aligning timestamps on full hourly grid...
+2026-02-07 20:59:24,212 - AQI_PIPELINE - INFO - Dropped empty AQI rows: 72
+2026-02-07 20:59:24,235 - AQI_PIPELINE - INFO - Final merged rows: 4272
+2026-02-07 21:08:26,669 - AQI_PIPELINE - INFO - Records upserted: 58
+2026-02-07 21:09:45,352 - AQI_PIPELINE - INFO - Building CLEAN dataset from RAW (production-grade)...
+2026-02-07 21:09:45,352 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 21:09:47,900 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 21:09:48,816 - AQI_PIPELINE - INFO - RAW rows loaded: 4330
+2026-02-07 21:09:48,848 - AQI_PIPELINE - WARNING - Missing timestamps detected: 48 hours
+2026-02-07 21:09:48,879 - AQI_PIPELINE - INFO - CLEAN rows ready: 4378
+2026-02-07 21:10:15,628 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED (CASE B HYBRID) ==========
+2026-02-07 21:10:15,628 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 21:10:16,825 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 21:10:18,998 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4378
+2026-02-07 21:10:19,591 - AQI_PIPELINE - INFO - Dropping old FEATURE_COLLECTION and inserting fresh dataset...
+2026-02-07 21:10:45,929 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED (CASE B) | ROWS=4186 | COLS=107 ==========
+2026-02-07 21:10:46,254 - AQI_PIPELINE - INFO - Sample feature keys: ['timestamp', 'city', 'co', 'humidity', 'ingested_at', 'no2', 'o3', 'pm10', 'pm2_5', 'precipitation', 'pressure', 'so2', 'source', 'temperature', 'wind_direction', 'wind_speed', 'aqi', 'hour', 'day_of_week', 'month'] ...
+2026-02-07 21:11:23,912 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) ==========
+2026-02-07 21:11:23,912 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 21:11:25,325 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 21:11:33,590 - AQI_PIPELINE - INFO - Feature rows loaded: 4186
+2026-02-07 21:11:33,656 - AQI_PIPELINE - WARNING - 48 completely missing hours detected after reindex
+2026-02-07 21:17:57,590 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) ==========
+2026-02-07 21:17:57,591 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-07 21:17:59,454 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-07 21:18:08,379 - AQI_PIPELINE - INFO - Feature rows loaded: 4186
+2026-02-07 21:18:08,447 - AQI_PIPELINE - WARNING - 48 completely missing hours detected after reindex
+2026-02-07 21:18:08,474 - AQI_PIPELINE - INFO - Rows after target filtering: 4186
+2026-02-07 21:18:08,648 - AQI_PIPELINE - INFO - Dropping old CLEANED_FEATURE_COLLECTION and inserting fresh dataset...
+2026-02-07 21:18:21,093 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE (CASE B) ==========
+2026-02-07 21:18:21,094 - AQI_PIPELINE - INFO - Final rows: 4186
+2026-02-07 21:18:21,095 - AQI_PIPELINE - INFO - Final columns: 109

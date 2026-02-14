@@ -1,0 +1,6 @@
+[project]
+name = "pearls-aqi"
+version = "0.1.0"
+
+[tool.setuptools]
+packages = ["app", "app.services", "app.pages", "config"]
