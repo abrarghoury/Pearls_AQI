@@ -1,0 +1,7 @@
+2026-02-15 18:23:59,718 - AQI_PIPELINE - INFO - ========== EXPORT CLEAN FEATURES STARTED ==========
+2026-02-15 18:23:59,719 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-15 18:24:02,226 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-15 18:24:12,815 - AQI_PIPELINE - INFO - Rows loaded from MongoDB: 4186
+2026-02-15 18:24:12,826 - AQI_PIPELINE - INFO - Columns: 109
+2026-02-15 18:24:17,517 - AQI_PIPELINE - INFO - CSV saved at: eda_data\cleaned_features.csv
+2026-02-15 18:24:17,589 - AQI_PIPELINE - INFO - ========== EXPORT COMPLETE ==========

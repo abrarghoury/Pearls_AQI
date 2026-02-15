@@ -6,11 +6,12 @@ on:
     - cron: "0 * * * *"
     # Run training pipeline daily at midnight UTC
     - cron: "0 0 * * *"
-  workflow_dispatch:  # manual trigger
+  workflow_dispatch:
 
 jobs:
   feature_pipeline:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -25,8 +26,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run feature pipeline
+      # 1️⃣ Fetch latest weather data (RAW_COLLECTION update)
+      - name: Run backfill (fetch latest weather data)
+        run: python -m data_pipeline.backfill
+        env:
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+
+      # 2️⃣ Build clean dataset (CLEAN_COLLECTION update)
+      - name: Build clean dataset
+        run: python -m data_pipeline.build_clean_dataset
+        env:
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+
+      # 3️⃣ Feature engineering (FEATURE_COLLECTION update)
+      - name: Run feature engineering
         run: python -m data_pipeline.feature_engineering
+        env:
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+
+      # 4️⃣ Feature sanity cleaning (CLEANED_FEATURE_COLLECTION update)
+      - name: Run feature sanity cleaning
+        run: python -m data_pipeline.sanity_check_features
         env:
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -35,6 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: feature_pipeline
     if: github.event_name == 'schedule' && github.event.schedule == '0 0 * * *'
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
