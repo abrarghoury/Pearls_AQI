@@ -5,8 +5,6 @@
 # Targets:
 #   - Regression: AQI numeric at t+24h
 #   - Classification: AQI class at t+24h, t+48h, t+72h
-# ---------------------------------------------------------
-# 
 # =========================================================
 
 import pandas as pd
@@ -236,16 +234,15 @@ def run_feature_pipeline_case_b():
     # -----------------------------------------------------
     # DROP ROWS THAT WOULD CAUSE LEAKAGE / NA
     # -----------------------------------------------------
-    # We must drop rows where:
-    #   - lag features missing (start)
-    #   - future targets missing (end)
     df = df.dropna()
 
     # -----------------------------------------------------
     # FINAL CLEANUP FOR MONGO
     # -----------------------------------------------------
     df["timestamp"] = df["timestamp"].apply(lambda x: x.to_pydatetime())
-    df["feature_generated_at"] = datetime.utcnow()
+
+    # ✅ SAFE CHANGE HERE ONLY
+    df["feature_generated_at"] = df["timestamp"]  # align with actual data timestamp
 
     df = df.replace({np.nan: None, pd.NaT: None})
 

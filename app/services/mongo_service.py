@@ -28,9 +28,13 @@ class MongoService:
     # -------------------------------------------------
     @classmethod
     def get_latest_features(cls):
+        """
+        Returns the most recent feature row based on timestamp.
+        This ensures dashboard shows latest AQI correctly.
+        """
         db = cls.get_db()
         return db[FEATURE_COLLECTION].find_one(
-            sort=[("feature_generated_at", -1)],
+            sort=[("timestamp", -1)],  # 🔑 Corrected: use actual timestamp
             projection={"_id": 0}
         )
 
@@ -75,7 +79,6 @@ class MongoService:
         Returns last N AQI feature rows for trend charts.
         Default = 48 hours.
         """
-
         db = cls.get_db()
 
         data = list(

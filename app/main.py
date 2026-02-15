@@ -42,7 +42,6 @@ def format_date(dt_obj):
         return "N/A"
 
 def chip(label: str, bg: str):
-    """Small colored chip (safe HTML, never breaks)."""
     if not label:
         label = "Unknown"
     if not bg:
@@ -91,7 +90,10 @@ if not latest_pred_log:
 # CURRENT AQI + WEATHER
 # =====================================================
 current_aqi = latest_features.get("aqi")
-current_time = latest_features.get("timestamp")
+
+# 🔥 IMPORTANT FIX (DATA TIME vs PIPELINE TIME)
+data_time = latest_features.get("timestamp")
+pipeline_time = latest_features.get("feature_generated_at")
 
 col1, col2 = st.columns([1.2, 1])
 
@@ -106,8 +108,16 @@ with col1:
     else:
         st.metric("AQI", aqi_val)
 
-    st.markdown(chip(cat, aqi_color_from_value(current_aqi)), unsafe_allow_html=True)
-    st.caption(f"Last updated: {safe_str(current_time)}")
+    st.markdown(
+        chip(cat, aqi_color_from_value(current_aqi)),
+        unsafe_allow_html=True
+    )
+
+    # ✅ CLEAR PIPELINE VISIBILITY
+    st.caption(
+        f"Data time: {safe_str(data_time)} | "
+        f"Pipeline run: {safe_str(pipeline_time)}"
+    )
 
 with col2:
     st.subheader("🌤️ Weather Snapshot")
@@ -130,12 +140,7 @@ st.subheader("📅 3-Day Forecast")
 preds = latest_pred_log.get("predictions", {})
 
 aqi_24h = preds.get("target_aqi_t_plus_24h")
-
-# NOTE:
-# We will NOT use class_24h for display.
-# Day-1 class will be derived from regression AQI.
 class_24h = preds.get("target_aqi_class_t_plus_24h")
-
 class_48h = preds.get("target_aqi_class_t_plus_48h")
 class_72h = preds.get("target_aqi_class_t_plus_72h")
 
@@ -152,7 +157,7 @@ date_3 = now + timedelta(days=3)
 # =====================================================
 c1, c2, c3 = st.columns(3)
 
-# ---------- CARD 1 (DAY 1 = Regression AQI + Derived Class) ----------
+# ---------- DAY 1 ----------
 with c1:
     st.markdown(f"### {format_date(date_1)}")
 
@@ -163,43 +168,32 @@ with c1:
         st.markdown(chip("Unknown", "#95a5a6"), unsafe_allow_html=True)
         st.caption("Expected range: N/A")
     else:
-        # ✅ Day-1 label + color derived from regression AQI value
-        derived_label = aqi_category(aqi_24h_val)
-        derived_color = aqi_color_from_value(aqi_24h_val)
+        label = aqi_category(aqi_24h_val)
+        color = aqi_color_from_value(aqi_24h_val)
 
         st.metric("Predicted AQI", aqi_24h_val)
+        st.markdown(chip(label, color), unsafe_allow_html=True)
 
-        st.markdown(
-            chip(derived_label, derived_color),
-            unsafe_allow_html=True
-        )
-
-        # For range, we can still use aqi_class_info if your function supports class.
-        # But since we are deriving from AQI value, safest is:
-        # show range based on derived label via thresholds.
-        # Here we will just show the same label and keep range from model class if exists.
         info = aqi_class_info(class_24h) or {}
         st.caption(f"Expected range: {info.get('range', 'N/A')}")
 
-# ---------- CARD 2 (DAY 2 = Classification) ----------
+# ---------- DAY 2 ----------
 with c2:
     st.markdown(f"### {format_date(date_2)}")
 
     info = aqi_class_info(class_48h) or {}
-
     st.markdown(
         chip(info.get("label", "Unknown"), aqi_class_color(class_48h)),
         unsafe_allow_html=True
     )
-    st.write("")  # spacing
+    st.write("")
     st.caption(f"Expected range: {info.get('range', 'N/A')}")
 
-# ---------- CARD 3 (DAY 3 = Classification) ----------
+# ---------- DAY 3 ----------
 with c3:
     st.markdown(f"### {format_date(date_3)}")
 
     info = aqi_class_info(class_72h) or {}
-
     st.markdown(
         chip(info.get("label", "Unknown"), aqi_class_color(class_72h)),
         unsafe_allow_html=True
@@ -208,4 +202,4 @@ with c3:
     st.caption(f"Expected range: {info.get('range', 'N/A')}")
 
 st.divider()
-st.caption(f"Forecast updated: {safe_str(latest_pred_log.get('created_at'))}")
+st.caption(f"Forecast generated at: {safe_str(latest_pred_log.get('created_at'))}")
