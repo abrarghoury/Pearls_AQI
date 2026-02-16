@@ -9,6 +9,11 @@ jobs:
   feature_pipeline:
     runs-on: ubuntu-latest
 
+    # ✅ Job-level env vars — automatically available in all steps
+    env:
+      OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -23,27 +28,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Fetch latest weather
+      # 1️⃣ Fetch latest weather data (RAW_COLLECTION update)
       - name: Run backfill
         run: python -m data_pipeline.backfill
-        env:
-          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
-          MONGO_URI: ${{ secrets.MONGO_URI }}
 
-      # Clean dataset
+      # 2️⃣ Build clean dataset (CLEAN_COLLECTION update)
       - name: Build clean dataset
         run: python -m data_pipeline.build_clean_dataset
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
 
-      # Feature engineering
+      # 3️⃣ Feature engineering (FEATURE_COLLECTION update)
       - name: Run feature engineering
         run: python -m data_pipeline.feature_engineering
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
 
-      # Sanity cleaning
+      # 4️⃣ Feature sanity cleaning (CLEANED_FEATURE_COLLECTION update)
       - name: Run feature sanity cleaning
         run: python -m data_pipeline.sanity_check_features
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}

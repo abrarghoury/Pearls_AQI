@@ -2,12 +2,16 @@ name: Pearls Train + Predict
 
 on:
   schedule:
-    - cron: "5 0 * * *"   # 5 minutes after midnight (VERY IMPORTANT)
+    - cron: "5 0 * * *"   # 5 minutes after midnight
   workflow_dispatch:
 
 jobs:
   train_predict:
     runs-on: ubuntu-latest
+
+    # ✅ Job-level env vars for all steps
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}
 
     steps:
       - name: Checkout repo
@@ -23,14 +27,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # TRAIN
+      # TRAINING
       - name: Run training pipeline
         run: python -m models.train_model
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
 
-      # PREDICT
+      # PREDICTION
       - name: Run prediction pipeline
-        run: python predict.py
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: python -m predict
