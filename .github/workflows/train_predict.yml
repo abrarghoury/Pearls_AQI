@@ -12,6 +12,7 @@ jobs:
     # ✅ Job-level env vars for all steps
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}
+      OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
 
     steps:
       - name: Checkout repo
