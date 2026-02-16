@@ -90,8 +90,6 @@ if not latest_pred_log:
 # CURRENT AQI + WEATHER
 # =====================================================
 current_aqi = latest_features.get("aqi")
-
-# 🔥 IMPORTANT FIX (DATA TIME vs PIPELINE TIME)
 data_time = latest_features.get("timestamp")
 pipeline_time = latest_features.get("feature_generated_at")
 
@@ -113,7 +111,6 @@ with col1:
         unsafe_allow_html=True
     )
 
-    # ✅ CLEAR PIPELINE VISIBILITY
     st.caption(
         f"Data time: {safe_str(data_time)} | "
         f"Pipeline run: {safe_str(pipeline_time)}"
@@ -157,7 +154,7 @@ date_3 = now + timedelta(days=3)
 # =====================================================
 c1, c2, c3 = st.columns(3)
 
-# ---------- DAY 1 ----------
+# ---------- DAY 1 (Regression AQI) ----------
 with c1:
     st.markdown(f"### {format_date(date_1)}")
 
@@ -174,31 +171,36 @@ with c1:
         st.metric("Predicted AQI", aqi_24h_val)
         st.markdown(chip(label, color), unsafe_allow_html=True)
 
-        info = aqi_class_info(class_24h) or {}
-        st.caption(f"Expected range: {info.get('range', 'N/A')}")
+        # Expected range derived from regression AQI
+        if aqi_24h_val <= 50:
+            range_str = "0 – 50"
+        elif aqi_24h_val <= 100:
+            range_str = "51 – 100"
+        elif aqi_24h_val <= 150:
+            range_str = "101 – 150"
+        elif aqi_24h_val <= 200:
+            range_str = "151 – 200"
+        elif aqi_24h_val <= 300:
+            range_str = "201 – 300"
+        else:
+            range_str = "301+"
 
-# ---------- DAY 2 ----------
+        st.caption(f"Expected range: {range_str}")
+
+# ---------- DAY 2 (Classification AQI Class) ----------
 with c2:
     st.markdown(f"### {format_date(date_2)}")
 
     info = aqi_class_info(class_48h) or {}
-    st.markdown(
-        chip(info.get("label", "Unknown"), aqi_class_color(class_48h)),
-        unsafe_allow_html=True
-    )
-    st.write("")
+    st.markdown(chip(info.get("label", "Unknown"), aqi_class_color(class_48h)), unsafe_allow_html=True)
     st.caption(f"Expected range: {info.get('range', 'N/A')}")
 
-# ---------- DAY 3 ----------
+# ---------- DAY 3 (Classification AQI Class) ----------
 with c3:
     st.markdown(f"### {format_date(date_3)}")
 
     info = aqi_class_info(class_72h) or {}
-    st.markdown(
-        chip(info.get("label", "Unknown"), aqi_class_color(class_72h)),
-        unsafe_allow_html=True
-    )
-    st.write("")
+    st.markdown(chip(info.get("label", "Unknown"), aqi_class_color(class_72h)), unsafe_allow_html=True)
     st.caption(f"Expected range: {info.get('range', 'N/A')}")
 
 st.divider()

@@ -26,13 +26,13 @@ PREDICTION_HORIZON_HOURS = 72
 TARGET_COLUMN = "aqi"
 TIMESTAMP_COLUMN = "timestamp"
 
+MODEL_COLLECTION = "model_registry"
+CLEANED_FEATURE_COLLECTION = "feature_cleaned"
 RAW_COLLECTION = "raw_aqi_data"
 CLEAN_COLLECTION = "clean_aqi"
-MODEL_COLLECTION = "model_registry"
-FEATURE_COLLECTION = "aqi_features"
-CLEANED_FEATURE_COLLECTION = "feature_cleaned"
-MODEL_REGISTRY_COLLECTION = "model_registry"
+FEATURE_COLLECTION = "feature_cleaned"
 PREDICTION_COLLECTION = "prediction_logs"
+MODEL_COLLECTION = "model_registry"
 
 # =========================
 # FEATURE CONFIG
