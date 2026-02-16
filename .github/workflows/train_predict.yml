@@ -9,7 +9,7 @@ jobs:
   train_predict:
     runs-on: ubuntu-latest
 
-    # ✅ Job-level env vars for all steps
+    #  Job-level env vars for all steps
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}
       OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
@@ -28,10 +28,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # ----------------------
       # TRAINING
+      # ----------------------
       - name: Run training pipeline
         run: python -m models.train_model
 
+      # ----------------------
       # PREDICTION
+      # ----------------------
       - name: Run prediction pipeline
-        run: python predict.py
+        run: python -m models.predict
