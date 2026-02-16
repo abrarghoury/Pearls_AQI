@@ -34,4 +34,4 @@ jobs:
 
       # PREDICTION
       - name: Run prediction pipeline
-        run: python -m predict
+        run: python predict.py
