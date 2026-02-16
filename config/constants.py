@@ -30,7 +30,7 @@ MODEL_COLLECTION = "model_registry"
 CLEANED_FEATURE_COLLECTION = "feature_cleaned"
 RAW_COLLECTION = "raw_aqi_data"
 CLEAN_COLLECTION = "clean_aqi"
-FEATURE_COLLECTION = "feature_cleaned"
+FEATURE_COLLECTION = "aqi_features"
 PREDICTION_COLLECTION = "prediction_logs"
 MODEL_COLLECTION = "model_registry"
 

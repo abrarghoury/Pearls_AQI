@@ -242,7 +242,7 @@ def run_feature_pipeline_case_b():
     df["timestamp"] = df["timestamp"].apply(lambda x: x.to_pydatetime())
 
     # ✅ SAFE CHANGE HERE ONLY
-    df["feature_generated_at"] = df["timestamp"]  # align with actual data timestamp
+    df["feature_generated_at"] = datetime.now()  # pipeline run timestamp
 
     df = df.replace({np.nan: None, pd.NaT: None})
 
