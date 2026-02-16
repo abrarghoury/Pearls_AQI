@@ -1,43 +1,46 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
+# -----------------------------------------------------
+# LOAD LOCAL .env IF EXISTS
+# -----------------------------------------------------
+load_dotenv()  # safe: only affects local dev
 
 class Settings:
     """
-    Central configuration for AQI system
+    Central configuration for AQI system.
+    Works for both local dev (.env) and CI/CD (GitHub Actions Secrets)
     """
 
-    # ENV
+    # ---------------- ENV & LOCATION ----------------
     ENV = os.getenv("ENV", "dev")
     TIMEZONE = os.getenv("TIMEZONE", "Asia/Karachi")
-
-    # API
-    OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
-
-    # DATABASE
-    MONGO_URI = os.getenv("MONGO_URI")
-    MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "pearls_aqi")
-
-    # LOCATION
     CITY = os.getenv("CITY", "Karachi")
     LAT = float(os.getenv("LAT", "24.8607"))
     LON = float(os.getenv("LON", "67.0011"))
 
-    # PIPELINE
-    PIPELINE_MODE = os.getenv("PIPELINE_MODE", "training")
+    # ---------------- API ----------------
+    OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
+    # ---------------- DATABASE ----------------
+    MONGO_URI = os.getenv("MONGO_URI")
+    MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "pearls_aqi")
 
+    # ---------------- PIPELINE ----------------
+    PIPELINE_MODE = os.getenv("PIPELINE_MODE", "training")  # training or inference
+
+# ---------------- CREATE INSTANCE ----------------
 settings = Settings()
 
-
-# Fail Fast
+# ---------------- FAIL FAST ----------------
+# This will work for both local and CI/CD
+missing_vars = []
 if not settings.OPENWEATHER_API_KEY:
-    raise ValueError("Missing OPENWEATHER_API_KEY in .env")
-
+    missing_vars.append("OPENWEATHER_API_KEY")
 if not settings.MONGO_URI:
-    raise ValueError("Missing MONGO_URI in .env")
-
+    missing_vars.append("MONGO_URI")
 if settings.PIPELINE_MODE not in ["training", "inference"]:
-    raise ValueError("PIPELINE_MODE must be training or inference")
+    raise ValueError("PIPELINE_MODE must be 'training' or 'inference'")
+
+if missing_vars:
+    raise ValueError(f"Missing environment variables: {', '.join(missing_vars)}")
