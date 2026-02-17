@@ -27,3 +27,10 @@
 2026-02-17 10:45:07,583 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE (CASE B) ==========
 2026-02-17 10:45:07,584 - AQI_PIPELINE - INFO - Final rows: 4420
 2026-02-17 10:45:07,584 - AQI_PIPELINE - INFO - Final columns: 109
+2026-02-17 15:18:50,457 - AQI_PIPELINE - INFO - ========== LATEST INGESTION START ==========
+2026-02-17 15:18:50,458 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-17 15:18:53,099 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-17 15:18:53,100 - AQI_PIPELINE - INFO - Fetching latest AQI data...
+2026-02-17 15:18:53,616 - AQI_PIPELINE - INFO - Fetching latest weather data...
+2026-02-17 15:18:55,121 - AQI_PIPELINE - INFO - Latest rows upserted: 0
+2026-02-17 15:18:55,136 - AQI_PIPELINE - INFO - ========== INGESTION COMPLETE ==========
