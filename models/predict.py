@@ -126,7 +126,7 @@ for target in TARGETS:
         pred = pred[0]
 
     # -------------------------------------------------
-    # MAKE JSON SAFE (VERY IMPORTANT FOR MONGO)
+    # JSON SAFE PREDICTION
     # -------------------------------------------------
     try:
         pred_value = float(pred)
@@ -151,7 +151,7 @@ for target in TARGETS:
     print(f"Prediction: {pred_value}")
 
 # -----------------------------------------------------
-# SAVE PREDICTIONS TO MONGODB ATLAS
+# SAVE PREDICTIONS + FEATURE SNAPSHOT TO MONGODB
 # -----------------------------------------------------
 if predictions:
     doc = {
@@ -159,11 +159,12 @@ if predictions:
         "created_at": datetime.utcnow(),
         "feature_generated_at": latest_row.get("feature_generated_at"),
         "predictions": predictions,
-        "meta": meta_info
+        "meta": meta_info,
+        "features_used": df_latest.to_dict(orient="records")[0]  # 🔥 IMPORTANT: STORE FEATURE SNAPSHOT
     }
 
     pred_col.insert_one(doc)
-    print("\n✅ Predictions saved to MongoDB Atlas collection:", PREDICTION_COLLECTION)
+    print("\n✅ Predictions + feature snapshot saved to MongoDB Atlas collection:", PREDICTION_COLLECTION)
 
 # -----------------------------------------------------
 # FINAL OUTPUT

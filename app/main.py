@@ -90,8 +90,11 @@ if not latest_pred_log:
 # CURRENT AQI + WEATHER
 # =====================================================
 current_aqi = latest_features.get("aqi")
-data_time = latest_features.get("timestamp")
+
+# ================= CHANGE MADE HERE =================
+data_time = latest_features.get("feature_generated_at")
 pipeline_time = latest_features.get("feature_generated_at")
+# =====================================================
 
 col1, col2 = st.columns([1.2, 1])
 
