@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime, timedelta
 
-from app.app_config import APP_CONFIG, CITY_CONFIG
+from app_config import APP_CONFIG, CITY_CONFIG
 from app.services.mongo_service import MongoService
 from app.services.aqi_utils import (
     aqi_category,
