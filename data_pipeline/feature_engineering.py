@@ -1,10 +1,12 @@
 # =========================================================
-# FEATURE ENGINEERING PIPELINE (CASE B HYBRID)
+# FEATURE ENGINEERING PIPELINE (CASE B HYBRID) – TRAINING + INFERENCE SAFE
 # ---------------------------------------------------------
 # Features: based ONLY on time t and past history
 # Targets:
-#   - Regression: AQI numeric at t+24h
-#   - Classification: AQI class at t+24h, t+48h, t+72h
+#   - Regression: AQI numeric at t+24h (training only)
+#   - Classification: AQI class at t+24h, t+48h, t+72h (training only)
+# ---------------------------------------------------------
+# Inference: keeps only latest row for prediction, no target shift
 # =========================================================
 
 import pandas as pd
@@ -20,6 +22,7 @@ from config.constants import (
     WEATHER_FEATURES,
     TARGET_COLUMN
 )
+from config.settings import settings
 
 # =========================================================
 # AQI BREAKPOINT TABLES (US EPA STANDARD)
@@ -54,33 +57,17 @@ def calculate_sub_index(conc, pollutant):
 
 
 def calculate_aqi_numeric(row):
-    """
-    Numeric AQI computed at CURRENT TIME (t).
-    Uses max sub-index across pollutants (US EPA).
-    """
     sub_indices = []
-
     for p in POLLUTANT_FEATURES:
         idx = calculate_sub_index(row.get(p), p)
         if idx is not None:
             sub_indices.append(idx)
-
     return max(sub_indices) if sub_indices else None
 
 
 def aqi_numeric_to_class(aqi_value: float):
-    """
-    Convert numeric AQI -> class (1-5)
-    Class mapping:
-        1 = Good (0-50)
-        2 = Moderate (51-100)
-        3 = Unhealthy for Sensitive (101-150)
-        4 = Unhealthy (151-200)
-        5 = Very Unhealthy / Hazardous (201+)
-    """
     if aqi_value is None or pd.isna(aqi_value):
         return None
-
     if aqi_value <= 50:
         return 1
     elif aqi_value <= 100:
@@ -135,33 +122,29 @@ def run_feature_pipeline_case_b():
     df = df.dropna(subset=[TARGET_COLUMN])
 
     # -----------------------------------------------------
-    # TIME FEATURES (SAFE)
+    # TIME FEATURES
     # -----------------------------------------------------
     df["hour"] = df["timestamp"].dt.hour
     df["day_of_week"] = df["timestamp"].dt.dayofweek
     df["month"] = df["timestamp"].dt.month
     df["is_weekend"] = df["day_of_week"].isin([5, 6]).astype(int)
 
-    # Cyclical time encoding (helps ML)
     df["hour_sin"] = np.sin(2 * np.pi * df["hour"] / 24)
     df["hour_cos"] = np.cos(2 * np.pi * df["hour"] / 24)
     df["dow_sin"] = np.sin(2 * np.pi * df["day_of_week"] / 7)
     df["dow_cos"] = np.cos(2 * np.pi * df["day_of_week"] / 7)
 
     # -----------------------------------------------------
-    # LAG FEATURES (PAST ONLY)
+    # LAG FEATURES
     # -----------------------------------------------------
-    # AQI lags (very important for regression + class)
     for lag in [1, 3, 6, 12, 24, 48, 72]:
         df[f"aqi_lag_{lag}h"] = df[TARGET_COLUMN].shift(lag)
 
-    # Pollutant lags (strongest features)
     pollutant_lags = [1, 3, 6, 12, 24]
     for p in POLLUTANT_FEATURES:
         for lag in pollutant_lags:
             df[f"{p}_lag_{lag}h"] = df[p].shift(lag)
 
-    # Weather lags (light but helpful)
     weather_lags = [1, 24]
     for w in WEATHER_FEATURES:
         if w not in df.columns:
@@ -170,93 +153,75 @@ def run_feature_pipeline_case_b():
             df[f"{w}_lag_{lag}h"] = df[w].shift(lag)
 
     # -----------------------------------------------------
-    # ROLLING FEATURES (PAST WINDOW ONLY)
+    # ROLLING FEATURES
     # -----------------------------------------------------
-    # AQI rolling
     df["aqi_roll_mean_6h"] = df[TARGET_COLUMN].rolling(6, min_periods=3).mean()
     df["aqi_roll_mean_12h"] = df[TARGET_COLUMN].rolling(12, min_periods=6).mean()
     df["aqi_roll_mean_24h"] = df[TARGET_COLUMN].rolling(24, min_periods=12).mean()
-
     df["aqi_roll_std_12h"] = df[TARGET_COLUMN].rolling(12, min_periods=6).std()
     df["aqi_roll_std_24h"] = df[TARGET_COLUMN].rolling(24, min_periods=12).std()
 
-    # Pollutant rolling means (best signal)
     for p in ["pm2_5", "pm10"]:
         if p not in df.columns:
             continue
-
-        df[f"{p}_roll_mean_3h"] = df[p].rolling(3, min_periods=2).mean()
-        df[f"{p}_roll_mean_6h"] = df[p].rolling(6, min_periods=3).mean()
-        df[f"{p}_roll_mean_12h"] = df[p].rolling(12, min_periods=6).mean()
-        df[f"{p}_roll_mean_24h"] = df[p].rolling(24, min_periods=12).mean()
-
-        df[f"{p}_roll_std_12h"] = df[p].rolling(12, min_periods=6).std()
-        df[f"{p}_roll_std_24h"] = df[p].rolling(24, min_periods=12).std()
+        for win in [3, 6, 12, 24]:
+            df[f"{p}_roll_mean_{win}h"] = df[p].rolling(win, min_periods=max(1, win//2)).mean()
+        for win in [12, 24]:
+            df[f"{p}_roll_std_{win}h"] = df[p].rolling(win, min_periods=win//2).std()
 
     # -----------------------------------------------------
-    # TREND / CHANGE RATE FEATURES
+    # TREND / DELTAS
     # -----------------------------------------------------
     df["aqi_delta_1h"] = df[TARGET_COLUMN] - df["aqi_lag_1h"]
     df["aqi_delta_3h"] = df[TARGET_COLUMN] - df["aqi_lag_3h"]
     df["aqi_delta_6h"] = df[TARGET_COLUMN] - df["aqi_lag_6h"]
     df["aqi_delta_24h"] = df[TARGET_COLUMN] - df["aqi_lag_24h"]
 
-    # pollutant deltas
-    if "pm2_5" in df.columns:
-        df["pm2_5_delta_1h"] = df["pm2_5"] - df["pm2_5_lag_1h"]
-        df["pm2_5_delta_3h"] = df["pm2_5"] - df["pm2_5_lag_3h"]
-        df["pm2_5_delta_6h"] = df["pm2_5"] - df["pm2_5_lag_6h"]
-
-    if "pm10" in df.columns:
-        df["pm10_delta_1h"] = df["pm10"] - df["pm10_lag_1h"]
-        df["pm10_delta_3h"] = df["pm10"] - df["pm10_lag_3h"]
+    # Pollutant deltas
+    for p in ["pm2_5", "pm10"]:
+        if p in df.columns:
+            for lag in [1, 3, 6]:
+                col_lag = f"{p}_lag_{lag}h"
+                if col_lag in df.columns:
+                    df[f"{p}_delta_{lag}h"] = df[p] - df[col_lag]
 
     # -----------------------------------------------------
-    # DERIVED RATIOS (SAFE)
+    # DERIVED RATIOS
     # -----------------------------------------------------
     if "pm2_5" in df.columns and "pm10" in df.columns:
         df["pm2_5_pm10_ratio"] = df["pm2_5"] / (df["pm10"] + 1e-6)
-
     if "no2" in df.columns and "o3" in df.columns:
         df["no2_o3_ratio"] = df["no2"] / (df["o3"] + 1e-6)
 
-    # -----------------------------------------------------
-    # TARGETS (FUTURE ONLY) - CASE B
-    # -----------------------------------------------------
-    # Regression target (only day 1)
-    df["target_aqi_t_plus_24h"] = df[TARGET_COLUMN].shift(-24)
-
-    # Classification targets (3 days)
-    df["target_aqi_class_t_plus_24h"] = df[TARGET_COLUMN].shift(-24).apply(aqi_numeric_to_class)
-    df["target_aqi_class_t_plus_48h"] = df[TARGET_COLUMN].shift(-48).apply(aqi_numeric_to_class)
-    df["target_aqi_class_t_plus_72h"] = df[TARGET_COLUMN].shift(-72).apply(aqi_numeric_to_class)
-
-    # -----------------------------------------------------
-    # DROP ROWS THAT WOULD CAUSE LEAKAGE / NA
-    # -----------------------------------------------------
-    df = df.dropna()
+    # =====================================================
+    # TARGETS (SHIFT ONLY IN TRAINING)
+    # =====================================================
+    if getattr(settings, "PIPELINE_MODE", "training") == "training":
+        df["target_aqi_t_plus_24h"] = df[TARGET_COLUMN].shift(-24)
+        df["target_aqi_class_t_plus_24h"] = df[TARGET_COLUMN].shift(-24).apply(aqi_numeric_to_class)
+        df["target_aqi_class_t_plus_48h"] = df[TARGET_COLUMN].shift(-48).apply(aqi_numeric_to_class)
+        df["target_aqi_class_t_plus_72h"] = df[TARGET_COLUMN].shift(-72).apply(aqi_numeric_to_class)
+        df = df.dropna()  # drop rows with missing targets
+    else:
+        # inference: keep only latest row
+        df = df.iloc[[-1]]
 
     # -----------------------------------------------------
-    # FINAL CLEANUP FOR MONGO
+    # FINAL CLEANUP
     # -----------------------------------------------------
     df["timestamp"] = df["timestamp"].apply(lambda x: x.to_pydatetime())
-
-    # ✅ SAFE CHANGE HERE ONLY
-    df["feature_generated_at"] = datetime.now()  # pipeline run timestamp
-
+    df["feature_generated_at"] = datetime.utcnow()
     df = df.replace({np.nan: None, pd.NaT: None})
 
     # -----------------------------------------------------
-    # SAVE TO FEATURE STORE (MongoDB)
+    # SAVE TO MONGO
     # -----------------------------------------------------
     logger.info("Dropping old FEATURE_COLLECTION and inserting fresh dataset...")
-
-    feature_col.delete_many({})  # safer than drop()
+    feature_col.delete_many({})
     feature_col.insert_many(df.to_dict("records"))
 
     logger.info(
-        f"========== FEATURE PIPELINE COMPLETED (CASE B) | "
-        f"ROWS={len(df)} | COLS={len(df.columns)} =========="
+        f"========== FEATURE PIPELINE COMPLETED | ROWS={len(df)} | COLS={len(df.columns)} =========="
     )
 
     # quick summary

@@ -27,18 +27,21 @@ class Settings:
     MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "pearls_aqi")
 
     # ---------------- PIPELINE ----------------
-    PIPELINE_MODE = os.getenv("PIPELINE_MODE", "training")  # training or inference
+    # training or inference
+    PIPELINE_MODE = os.getenv("PIPELINE_MODE", "training")
 
 # ---------------- CREATE INSTANCE ----------------
 settings = Settings()
 
 # ---------------- FAIL FAST ----------------
-# This will work for both local and CI/CD
 missing_vars = []
+
 if not settings.OPENWEATHER_API_KEY:
     missing_vars.append("OPENWEATHER_API_KEY")
+
 if not settings.MONGO_URI:
     missing_vars.append("MONGO_URI")
+
 if settings.PIPELINE_MODE not in ["training", "inference"]:
     raise ValueError("PIPELINE_MODE must be 'training' or 'inference'")
 

@@ -1,15 +1,16 @@
 # =========================================================
-# FEATURE SANITY + CLEANING PIPELINE 
+# FEATURE SANITY + CLEANING PIPELINE – TRAINING + INFERENCE
 # ---------------------------------------------------------
 # Loads:   FEATURE_COLLECTION  (aqi_features)
 # Writes:  CLEANED_FEATURE_COLLECTION
 # ---------------------------------------------------------
 # Cleans:
-# - strict hourly continuity
+# - strict hourly continuity (training only)
 # - drops bad columns
 # - fills missing values safely (time-series aware)
 # - removes constant features
-# - validates targets exist
+# - validates targets exist (training only)
+# - inference mode: keep latest row for dashboard
 # =========================================================
 
 import numpy as np
@@ -23,6 +24,7 @@ from config.constants import (
     CLEANED_FEATURE_COLLECTION,
     TARGET_COLUMN
 )
+from config.settings import settings
 
 # =========================================================
 # CONFIG
@@ -42,21 +44,11 @@ CLASS_TARGETS = [
 
 ALL_TARGETS = [REGRESSION_TARGET] + CLASS_TARGETS
 
-
 # =========================================================
 # HELPERS
 # =========================================================
 def enforce_hourly_index(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Reindex to strict hourly timeline.
-    This is safer than dropping missing timestamps.
-    """
-    full_range = pd.date_range(
-        df["timestamp"].min(),
-        df["timestamp"].max(),
-        freq="h"
-    )
-
+    full_range = pd.date_range(df["timestamp"].min(), df["timestamp"].max(), freq="h")
     df = df.set_index("timestamp").reindex(full_range)
     df.index.name = "timestamp"
 
@@ -70,62 +62,30 @@ def enforce_hourly_index(df: pd.DataFrame) -> pd.DataFrame:
 def drop_high_missing_columns(df: pd.DataFrame):
     missing_ratio = df.isna().mean()
     drop_cols = missing_ratio[missing_ratio > MAX_MISSING_COL_RATIO].index.tolist()
-
-    # Never drop timestamp
-    if "timestamp" in drop_cols:
-        drop_cols.remove("timestamp")
-
-    # Never drop targets even if missing
-    for t in ALL_TARGETS:
-        if t in drop_cols:
-            drop_cols.remove(t)
-
+    for protected in ["timestamp"] + ALL_TARGETS:
+        if protected in drop_cols:
+            drop_cols.remove(protected)
     if drop_cols:
         logger.warning(f"Dropping high-missing columns: {drop_cols}")
-
     return df.drop(columns=drop_cols), drop_cols
 
 
 def smart_fill(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Time-series safe filling:
-    - forward fill
-    - backward fill
-    - median fallback
-    """
     num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-
     if num_cols:
-        df[num_cols] = df[num_cols].ffill()
-        df[num_cols] = df[num_cols].bfill()
-
+        df[num_cols] = df[num_cols].ffill().bfill()
         for col in num_cols:
             if df[col].isna().any():
                 df[col] = df[col].fillna(df[col].median())
-
     return df
 
 
 def remove_constant_features(df: pd.DataFrame):
-    """
-    Remove numeric columns with 0 variance.
-    These hurt ML training.
-    """
     num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-
-    # never drop targets
     protected = set(ALL_TARGETS + [AQI_COL])
-
-    drop_cols = []
-    for c in num_cols:
-        if c in protected:
-            continue
-        if df[c].nunique(dropna=True) <= 1:
-            drop_cols.append(c)
-
+    drop_cols = [c for c in num_cols if c not in protected and df[c].nunique(dropna=True) <= 1]
     if drop_cols:
         logger.warning(f"Dropping constant columns: {drop_cols}")
-
     return df.drop(columns=drop_cols), drop_cols
 
 
@@ -133,16 +93,16 @@ def validate_targets_exist(df: pd.DataFrame):
     missing = [t for t in ALL_TARGETS if t not in df.columns]
     if missing:
         raise ValueError(
-            f"Missing required targets in FEATURE_COLLECTION: {missing}. "
-            f"Run feature_engineering again (Case B)."
+            f"Missing required targets in FEATURE_COLLECTION: {missing}. Run feature_engineering again (Case B)."
         )
 
 
 # =========================================================
 # MAIN PIPELINE
 # =========================================================
-def clean_features_for_training_case_b():
-    logger.info("========== FEATURE CLEANING STARTED (CASE B) ==========")
+def clean_features_case_b():
+    mode = getattr(settings, "PIPELINE_MODE", "training")
+    logger.info(f"========== FEATURE CLEANING STARTED (CASE B) | MODE={mode} ==========")
 
     db = get_database()
     src_col = db[FEATURE_COLLECTION]
@@ -158,37 +118,26 @@ def clean_features_for_training_case_b():
     df = pd.DataFrame(data)
     logger.info(f"Feature rows loaded: {len(df)}")
 
-    # -----------------------------------------------------
-    # TIMESTAMP
-    # -----------------------------------------------------
     df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
-    df = df.dropna(subset=["timestamp"])
-    df = df.sort_values("timestamp").reset_index(drop=True)
+    df = df.dropna(subset=["timestamp"]).sort_values("timestamp").reset_index(drop=True)
 
     # -----------------------------------------------------
-    # TARGET VALIDATION
+    # TRAINING MODE
     # -----------------------------------------------------
-    validate_targets_exist(df)
+    if mode == "training":
+        validate_targets_exist(df)
+        df = enforce_hourly_index(df)
+        df = df.replace([np.inf, -np.inf], np.nan)
+        df = df.dropna(subset=ALL_TARGETS)
+    else:
+        # -------------------------------------------------
+        # INFERENCE MODE – keep only latest row
+        # -------------------------------------------------
+        df = df.sort_values("timestamp").iloc[[-1]]
+        df = df.replace([np.inf, -np.inf], np.nan)
 
     # -----------------------------------------------------
-    # STRICT hourly continuity
-    # -----------------------------------------------------
-    df = enforce_hourly_index(df)
-
-    # -----------------------------------------------------
-    # Replace inf
-    # -----------------------------------------------------
-    df = df.replace([np.inf, -np.inf], np.nan)
-
-    # -----------------------------------------------------
-    # Drop rows where targets missing
-    # (CRITICAL)
-    # -----------------------------------------------------
-    df = df.dropna(subset=ALL_TARGETS)
-    logger.info(f"Rows after target filtering: {len(df)}")
-
-    # -----------------------------------------------------
-    # Clip AQI numeric range (EPA)
+    # Clip AQI / targets
     # -----------------------------------------------------
     if AQI_COL in df.columns:
         df[AQI_COL] = pd.to_numeric(df[AQI_COL], errors="coerce").clip(0, 500)
@@ -196,23 +145,22 @@ def clean_features_for_training_case_b():
     if REGRESSION_TARGET in df.columns:
         df[REGRESSION_TARGET] = pd.to_numeric(df[REGRESSION_TARGET], errors="coerce").clip(0, 500)
 
-    # classification targets must be ints 1..5
     for t in CLASS_TARGETS:
         if t in df.columns:
             df[t] = pd.to_numeric(df[t], errors="coerce").clip(1, 5)
 
     # -----------------------------------------------------
-    # Drop very sparse columns
+    # Drop sparse columns
     # -----------------------------------------------------
     df, dropped_missing = drop_high_missing_columns(df)
 
     # -----------------------------------------------------
-    # SMART FILL
+    # Smart fill remaining NaNs
     # -----------------------------------------------------
     df = smart_fill(df)
 
     # -----------------------------------------------------
-    # Remove constant junk features
+    # Remove constant features
     # -----------------------------------------------------
     df, dropped_constant = remove_constant_features(df)
 
@@ -223,22 +171,15 @@ def clean_features_for_training_case_b():
         bad_cols = df.columns[df.isna().any()].tolist()
         raise ValueError(f"NaNs still present after cleaning. Bad cols: {bad_cols[:30]}")
 
-    # -----------------------------------------------------
-    # SAVE
-    # -----------------------------------------------------
     df["validation_done_at"] = datetime.utcnow()
     df["rows_after_cleaning"] = int(len(df))
-
     df = df.replace({np.nan: None})
 
     logger.info("Dropping old CLEANED_FEATURE_COLLECTION and inserting fresh dataset...")
     dst_col.drop()
     dst_col.insert_many(df.to_dict("records"))
 
-    logger.info("========== FEATURE CLEANING COMPLETE (CASE B) ==========")
-    logger.info(f"Final rows: {len(df)}")
-    logger.info(f"Final columns: {len(df.columns)}")
-
+    logger.info(f"========== FEATURE CLEANING COMPLETE | ROWS={len(df)} | MODE={mode} ==========")
     return {
         "rows": len(df),
         "columns": len(df.columns),
@@ -251,8 +192,7 @@ def clean_features_for_training_case_b():
 # RUN
 # =========================================================
 if __name__ == "__main__":
-    summary = clean_features_for_training_case_b()
-
+    summary = clean_features_case_b()
     print("\n===== FEATURE CLEANING SUMMARY (CASE B) =====")
     for k, v in summary.items():
         print(f"{k}: {v}")
