@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 from config.settings import settings
 from config.constants import (
-    FEATURE_COLLECTION,
+    CLEANED_FEATURE_COLLECTION,  # ✅ use cleaned features
     MODEL_COLLECTION,
     PREDICTION_COLLECTION
 )
@@ -22,7 +22,6 @@ from config.constants import (
 # LOAD ENV
 # -----------------------------------------------------
 load_dotenv()
-
 print("========== STARTING PREDICTION PIPELINE ==========")
 
 # -----------------------------------------------------
@@ -31,7 +30,7 @@ print("========== STARTING PREDICTION PIPELINE ==========")
 client = MongoClient(settings.MONGO_URI)
 db = client[settings.MONGO_DB_NAME]
 
-feature_col = db[FEATURE_COLLECTION]
+feature_col = db[CLEANED_FEATURE_COLLECTION]  # Use cleaned features for prediction
 registry_col = db[MODEL_COLLECTION]
 pred_col = db[PREDICTION_COLLECTION]
 
@@ -59,7 +58,6 @@ if latest_row is None:
     raise ValueError("❌ No features found. Run feature pipeline first!")
 
 df_latest = pd.DataFrame([latest_row])
-
 print("Latest feature row loaded")
 print("Feature timestamp:", latest_row.get("feature_generated_at"))
 print("Total features:", len(df_latest.columns))
@@ -71,7 +69,6 @@ predictions = {}
 meta_info = {}
 
 for target in TARGETS:
-
     print(f"\n--- Predicting: {target} ---")
 
     # Fetch latest trained model for this target
@@ -99,16 +96,13 @@ for target in TARGETS:
     # Validate features
     missing_features = [f for f in features_used if f not in df_latest.columns]
     if missing_features:
-        print(f"Missing features ({len(missing_features)}): {missing_features[:5]}...")
+        print(f"❌ Missing features ({len(missing_features)}): {missing_features[:5]}...")
         continue
 
     X_latest = df_latest[features_used].copy()
 
     # Convert all features to numeric
-    for col in X_latest.columns:
-        X_latest[col] = pd.to_numeric(X_latest[col], errors="coerce")
-
-    X_latest = X_latest.fillna(0)
+    X_latest = X_latest.apply(pd.to_numeric, errors="coerce").fillna(0)
 
     # -------------------------------------------------
     # SCALER SUPPORT (IF USED DURING TRAINING)
@@ -146,7 +140,6 @@ for target in TARGETS:
             pass
 
     predictions[target] = pred_value
-
     meta_info[target] = {
         "model_name": model_name,
         "task_type": task_type,
@@ -161,7 +154,6 @@ for target in TARGETS:
 # SAVE PREDICTIONS TO MONGODB ATLAS
 # -----------------------------------------------------
 if predictions:
-
     doc = {
         "city": settings.CITY,
         "created_at": datetime.utcnow(),
@@ -171,9 +163,7 @@ if predictions:
     }
 
     pred_col.insert_one(doc)
-
-    print("\n✅ Predictions saved to MongoDB Atlas collection:",
-          PREDICTION_COLLECTION)
+    print("\n✅ Predictions saved to MongoDB Atlas collection:", PREDICTION_COLLECTION)
 
 # -----------------------------------------------------
 # FINAL OUTPUT

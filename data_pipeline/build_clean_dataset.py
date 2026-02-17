@@ -1,20 +1,19 @@
 import pandas as pd
 import numpy as np
 from config.mongo import get_database
-from config.constants import RAW_COLLECTION
+from config.constants import RAW_COLLECTION, CLEAN_COLLECTION
 from config.logging import logger
 
-CLEAN_COLLECTION = "clean_aqi"
 
 def build_clean_dataset():
-    logger.info("Building CLEAN dataset from RAW (production-grade)...")
+    logger.info("========== BUILD CLEAN DATASET STARTED ==========")
 
     db = get_database()
     raw_col = db[RAW_COLLECTION]
     clean_col = db[CLEAN_COLLECTION]
 
     # -----------------------------
-    # LOAD RAW
+    # LOAD RAW DATA
     # -----------------------------
     data = list(raw_col.find({}, {"_id": 0}))
     if not data:
@@ -38,35 +37,40 @@ def build_clean_dataset():
     # -----------------------------
     # CRITICAL NUMERIC COLUMNS
     # -----------------------------
-    numeric_cols = ["pm2_5", "pm10", "no2", "o3", "co", "so2",
-                    "temperature", "humidity", "pressure", "wind_speed",
-                    "wind_direction", "precipitation"]
+    numeric_cols = [
+        "pm2_5", "pm10", "no2", "o3", "co", "so2",
+        "temperature", "humidity", "pressure", "wind_speed",
+        "wind_direction", "precipitation"
+    ]
+
+    # Set DatetimeIndex for time interpolation
+    df = df.set_index("timestamp")
 
     for col in numeric_cols:
         if col in df.columns:
-            # Forward fill then backward fill to handle isolated NaNs
+            # Time-aware interpolation
+            df[col] = df[col].interpolate(method="time")
+            # Fill remaining NaNs at start/end
             df[col] = df[col].ffill().bfill()
 
     # -----------------------------
-    # CHECK CONTINUITY (hourly)
+    # STRICT HOURLY CONTINUITY
     # -----------------------------
-    df = df.set_index("timestamp")
     full_range = pd.date_range(df.index.min(), df.index.max(), freq="H")
     missing_hours = full_range.difference(df.index)
 
     if len(missing_hours) > 0:
         logger.warning(f"Missing timestamps detected: {len(missing_hours)} hours")
-        # Insert NaN rows for missing hours to maintain continuity
         df = df.reindex(full_range)
-        df[numeric_cols] = df[numeric_cols].ffill().bfill()
+        for col in numeric_cols:
+            if col in df.columns:
+                df[col] = df[col].interpolate(method="time").ffill().bfill()
 
-    df.reset_index(inplace=True)
-    df.rename(columns={"index": "timestamp"}, inplace=True)
+    df = df.reset_index().rename(columns={"index": "timestamp"})
 
     # -----------------------------
-    # FINAL CLEANUP
+    # FINAL CLEANUP FOR MONGO
     # -----------------------------
-    # Replace remaining NaN / NaT → None for Mongo
     df = df.replace({np.nan: None, pd.NaT: None})
 
     logger.info(f"CLEAN rows ready: {len(df)}")
@@ -74,17 +78,27 @@ def build_clean_dataset():
     records = df.to_dict("records")
 
     # -----------------------------
-    # WRITE CLEAN COLLECTION
+    # SAVE TO CLEAN COLLECTION
     # -----------------------------
-    clean_col.drop()
+    logger.info("Dropping old CLEAN_COLLECTION and inserting fresh data...")
+    clean_col.delete_many({})
     if records:
         clean_col.insert_many(records)
 
-    print("\n========== CLEAN DATASET READY ==========")
-    print("Rows:", clean_col.count_documents({}))
+    # -----------------------------
+    # SUMMARY
+    # -----------------------------
+    total_rows = clean_col.count_documents({})
     sample = clean_col.find_one({}, {"_id": 0})
-    print("Columns:", len(sample.keys()))
+    total_cols = len(sample.keys()) if sample else 0
+
+    print("\n========== CLEAN DATASET READY ==========")
+    print("Rows:", total_rows)
+    print("Columns:", total_cols)
     print("========================================")
+
+    logger.info("========== BUILD CLEAN DATASET COMPLETED ==========")
+
 
 if __name__ == "__main__":
     build_clean_dataset()

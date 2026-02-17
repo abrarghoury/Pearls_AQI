@@ -1,5 +1,5 @@
 # =====================================================
-# MULTI-DAY AQI MODEL TRAINING PIPELINE (BEST MODEL ONLY)
+# MULTI-DAY AQI MODEL TRAINING PIPELINE (CLEANED + BEST + BALANCED)
 # =====================================================
 
 import os
@@ -12,17 +12,18 @@ from dotenv import load_dotenv
 import warnings
 
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.linear_model import Ridge, LogisticRegression
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from xgboost import XGBClassifier
 from sklearn.metrics import (
     mean_squared_error, mean_absolute_error, r2_score,
     accuracy_score, f1_score
 )
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.exceptions import ConvergenceWarning
 
 from config.settings import settings
-from config.constants import FEATURE_COLLECTION, MODEL_COLLECTION
+from config.constants import CLEANED_FEATURE_COLLECTION, MODEL_COLLECTION
 
 # -----------------------------------------------------
 # LOAD ENV
@@ -35,10 +36,10 @@ load_dotenv()
 client = MongoClient(settings.MONGO_URI)
 db = client[settings.MONGO_DB_NAME]
 
-feature_col = db[FEATURE_COLLECTION]
+feature_col = db[CLEANED_FEATURE_COLLECTION]
 registry_col = db[MODEL_COLLECTION]
 
-print("========== STARTING CASE B TRAINING PIPELINE ==========")
+print("========== STARTING CASE B TRAINING PIPELINE (CLEANED + BEST + BALANCED) ==========")
 
 # -----------------------------------------------------
 # LOAD FEATURES
@@ -60,7 +61,9 @@ TARGETS = [
 # -----------------------------------------------------
 # DROP NON-FEATURE COLUMNS AND NON-NUMERIC
 # -----------------------------------------------------
-DROP_COLS = ["timestamp", "feature_generated_at"] + TARGETS
+META_COLS = ["timestamp", "feature_generated_at", "validation_done_at", "rows_after_cleaning"]
+DROP_COLS = META_COLS + TARGETS
+
 FEATURE_COLS = [c for c in df.columns if c not in DROP_COLS and pd.api.types.is_numeric_dtype(df[c])]
 X = df[FEATURE_COLS]
 
@@ -75,19 +78,24 @@ REGRESSORS = {
     "GradientBoosting": GradientBoostingRegressor(
         n_estimators=300, learning_rate=0.05, max_depth=4, random_state=42
     ),
-    "Ridge": Ridge(alpha=1.0)
+    "ExtraTrees": ExtraTreesRegressor(
+        n_estimators=300, max_depth=18, min_samples_split=5,
+        random_state=42, n_jobs=-1
+    )
 }
 
 CLASSIFIERS = {
     "RandomForest": RandomForestClassifier(
         n_estimators=300, max_depth=18, min_samples_split=5,
+        class_weight="balanced",
         random_state=42, n_jobs=-1
     ),
     "GradientBoosting": GradientBoostingClassifier(
         n_estimators=300, learning_rate=0.05, max_depth=4, random_state=42
     ),
-    "LogisticRegression": LogisticRegression(
-        max_iter=2000, solver='lbfgs'
+    "XGBoost": XGBClassifier(
+        n_estimators=300, learning_rate=0.05, max_depth=4,
+        use_label_encoder=False, eval_metric="mlogloss", random_state=42
     )
 }
 
@@ -118,8 +126,26 @@ for target in TARGETS:
         task_type = 'regression'
         models = REGRESSORS
 
-    # Split (time-series aware)
+    # --------------------------
+    # Time-series aware train-test split
+    # --------------------------
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+
+    # --------------------------
+    # Handle class imbalance & label shift (classification only)
+    # --------------------------
+    if task_type == 'classification':
+        # Shift labels 1..5 -> 0..4 for XGBoost
+        y_train_xgb = y_train - 1
+        y_test_xgb = y_test - 1
+
+        # Oversample training set
+        ros = RandomOverSampler(random_state=42)
+        X_train_res, y_train_res = ros.fit_resample(X_train, y_train)
+        X_train_res_xgb, y_train_res_xgb = ros.fit_resample(X_train, y_train_xgb)
+    else:
+        X_train_res, y_train_res = X_train, y_train
+        y_test_xgb = y_test
 
     best_model = None
     best_score = -999
@@ -127,9 +153,22 @@ for target in TARGETS:
     best_name = None
 
     for model_name, model in models.items():
-        model.fit(X_train, y_train)
-        preds = model.predict(X_test)
+        # Select correct training labels
+        if task_type == 'classification' and model_name == 'XGBoost':
+            y_fit = y_train_res_xgb
+        else:
+            y_fit = y_train_res
 
+        # Fit model
+        model.fit(X_train_res, y_fit)
+
+        # Predict
+        if task_type == 'classification' and model_name == 'XGBoost':
+            preds = model.predict(X_test) - 1  # shift back? optional
+        else:
+            preds = model.predict(X_test)
+
+        # Evaluate
         if task_type == 'regression':
             rmse = np.sqrt(mean_squared_error(y_test, preds))
             mae = mean_absolute_error(y_test, preds)
@@ -174,4 +213,4 @@ for target in TARGETS:
 
     print(f"  BEST MODEL for {target}: {best_name} | Task={task_type} | Score={best_score:.3f}")
 
-print("\n========== TRAINING PIPELINE COMPLETED ==========")
+print("\n========== TRAINING PIPELINE COMPLETED (BEST + BALANCED) ==========")

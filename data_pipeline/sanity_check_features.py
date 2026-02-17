@@ -20,7 +20,8 @@ from config.mongo import get_database
 from config.logging import logger
 from config.constants import (
     FEATURE_COLLECTION,
-    CLEANED_FEATURE_COLLECTION
+    CLEANED_FEATURE_COLLECTION,
+    TARGET_COLUMN
 )
 
 # =========================================================
@@ -28,7 +29,7 @@ from config.constants import (
 # =========================================================
 MAX_MISSING_COL_RATIO = 0.35
 
-AQI_COL = "aqi"
+AQI_COL = TARGET_COLUMN
 
 # CASE B TARGETS
 REGRESSION_TARGET = "target_aqi_t_plus_24h"

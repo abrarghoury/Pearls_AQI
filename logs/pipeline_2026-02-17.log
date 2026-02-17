@@ -1,0 +1,29 @@
+2026-02-17 10:41:04,914 - AQI_PIPELINE - INFO - ========== BUILD CLEAN DATASET STARTED ==========
+2026-02-17 10:41:04,915 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-17 10:41:07,128 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-17 10:41:08,908 - AQI_PIPELINE - INFO - RAW rows loaded: 4564
+2026-02-17 10:42:57,958 - AQI_PIPELINE - INFO - ========== BUILD CLEAN DATASET STARTED ==========
+2026-02-17 10:42:57,958 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-17 10:42:59,930 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-17 10:43:01,518 - AQI_PIPELINE - INFO - RAW rows loaded: 4564
+2026-02-17 10:43:01,622 - AQI_PIPELINE - WARNING - Missing timestamps detected: 48 hours
+2026-02-17 10:43:01,672 - AQI_PIPELINE - INFO - CLEAN rows ready: 4612
+2026-02-17 10:43:01,722 - AQI_PIPELINE - INFO - Dropping old CLEAN_COLLECTION and inserting fresh data...
+2026-02-17 10:43:10,116 - AQI_PIPELINE - INFO - ========== BUILD CLEAN DATASET COMPLETED ==========
+2026-02-17 10:43:34,568 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED (CASE B HYBRID) ==========
+2026-02-17 10:43:34,568 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-17 10:43:35,888 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-17 10:43:37,977 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4612
+2026-02-17 10:43:38,337 - AQI_PIPELINE - INFO - Dropping old FEATURE_COLLECTION and inserting fresh dataset...
+2026-02-17 10:44:01,217 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED (CASE B) | ROWS=4420 | COLS=107 ==========
+2026-02-17 10:44:01,318 - AQI_PIPELINE - INFO - Sample feature keys: ['timestamp', 'city', 'co', 'humidity', 'ingested_at', 'no2', 'o3', 'pm10', 'pm2_5', 'precipitation', 'pressure', 'so2', 'source', 'temperature', 'wind_direction', 'wind_speed', 'aqi', 'hour', 'day_of_week', 'month'] ...
+2026-02-17 10:44:35,824 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) ==========
+2026-02-17 10:44:35,825 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-17 10:44:37,630 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-17 10:44:44,358 - AQI_PIPELINE - INFO - Feature rows loaded: 4420
+2026-02-17 10:44:44,393 - AQI_PIPELINE - WARNING - 48 completely missing hours detected after reindex
+2026-02-17 10:44:44,436 - AQI_PIPELINE - INFO - Rows after target filtering: 4420
+2026-02-17 10:44:44,709 - AQI_PIPELINE - INFO - Dropping old CLEANED_FEATURE_COLLECTION and inserting fresh dataset...
+2026-02-17 10:45:07,583 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE (CASE B) ==========
+2026-02-17 10:45:07,584 - AQI_PIPELINE - INFO - Final rows: 4420
+2026-02-17 10:45:07,584 - AQI_PIPELINE - INFO - Final columns: 109

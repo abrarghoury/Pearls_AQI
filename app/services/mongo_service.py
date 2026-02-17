@@ -3,7 +3,7 @@ from config.settings import settings
 from config.constants import (
     RAW_COLLECTION,
     CLEAN_COLLECTION,
-    FEATURE_COLLECTION,
+    CLEANED_FEATURE_COLLECTION,
     PREDICTION_COLLECTION,
     MODEL_COLLECTION
 )
@@ -24,17 +24,17 @@ class MongoService:
         return cls._db
 
     # -------------------------------------------------
-    # LATEST FEATURE ROW
+    # LATEST FEATURE ROW (CLEANED FEATURE)
     # -------------------------------------------------
     @classmethod
     def get_latest_features(cls):
         """
-        Returns the most recent feature row based on timestamp.
-        This ensures dashboard shows latest AQI correctly.
+        Returns the most recent cleaned feature row.
+        Ensures dashboard shows latest AQI as models were trained.
         """
         db = cls.get_db()
-        return db[FEATURE_COLLECTION].find_one(
-            sort=[("timestamp", -1)],  # 🔑 Corrected: use actual timestamp
+        return db[CLEANED_FEATURE_COLLECTION].find_one(
+            sort=[("timestamp", -1)],  # Use actual timestamp
             projection={"_id": 0}
         )
 
@@ -71,25 +71,20 @@ class MongoService:
         )
 
     # =================================================
-    # ⭐ NEW — AQI TREND (VERY IMPORTANT FOR DASHBOARD)
+    # ⭐ AQI TREND (CLEANED FEATURE)
     # =================================================
     @classmethod
-    def get_recent_features(cls, limit=48):
+    def get_recent_features(cls, limit: int = 48):
         """
-        Returns last N AQI feature rows for trend charts.
+        Returns last N cleaned AQI feature rows for trend charts.
         Default = 48 hours.
         """
         db = cls.get_db()
-
         data = list(
-            db[FEATURE_COLLECTION]
+            db[CLEANED_FEATURE_COLLECTION]
             .find(
-                {},
-                {
-                    "_id": 0,
-                    "timestamp": 1,
-                    "aqi": 1
-                }
+                {}, 
+                {"_id": 0, "timestamp": 1, "aqi": 1}
             )
             .sort("timestamp", -1)
             .limit(limit)

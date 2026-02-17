@@ -32,7 +32,7 @@ RAW_COLLECTION = "raw_aqi_data"
 CLEAN_COLLECTION = "clean_aqi"
 FEATURE_COLLECTION = "aqi_features"
 PREDICTION_COLLECTION = "prediction_logs"
-MODEL_COLLECTION = "model_registry"
+LATEST_PREDICTION_COLLECTION = "predictions"
 
 # =========================
 # FEATURE CONFIG

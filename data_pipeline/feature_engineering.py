@@ -126,7 +126,7 @@ def run_feature_pipeline_case_b():
     # -----------------------------------------------------
     for col in POLLUTANT_FEATURES + WEATHER_FEATURES:
         if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
+            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0.0)
 
     # -----------------------------------------------------
     # CURRENT AQI NUMERIC (time t)
@@ -251,7 +251,7 @@ def run_feature_pipeline_case_b():
     # -----------------------------------------------------
     logger.info("Dropping old FEATURE_COLLECTION and inserting fresh dataset...")
 
-    feature_col.drop()
+    feature_col.delete_many({})  # safer than drop()
     feature_col.insert_many(df.to_dict("records"))
 
     logger.info(

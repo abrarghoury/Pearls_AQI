@@ -1,12 +1,13 @@
 import joblib
 import shap
+import os
 import numpy as np
 import pandas as pd
 from pymongo import MongoClient
 from config.settings import settings
 from config.constants import (
     MODEL_COLLECTION,
-    FEATURE_COLLECTION
+    CLEANED_FEATURE_COLLECTION  
 )
 
 # =====================================================
@@ -14,8 +15,10 @@ from config.constants import (
 # =====================================================
 
 def _get_db():
+    """Returns MongoDB database connection."""
     client = MongoClient(settings.MONGO_URI)
     return client[settings.MONGO_DB_NAME]
+
 
 def _load_best_regression_model():
     """
@@ -31,25 +34,30 @@ def _load_best_regression_model():
         raise ValueError("No trained regression model found in registry.")
 
     model_path = model_doc.get("model_path")
-    if not model_path:
-        raise ValueError("Model path missing in registry.")
+    if not model_path or not os.path.exists(model_path):
+        raise ValueError(f"Model file missing: {model_path}")
 
     model = joblib.load(model_path)
     return model, model_doc
+
 
 def _load_feature_dataframe(model_doc):
     """
     Loads cleaned feature dataset used for training and aligns columns with model.
     """
     db = _get_db()
-    data = list(db[FEATURE_COLLECTION].find({}, {"_id": 0}))
+    data = list(db[CLEANED_FEATURE_COLLECTION].find({}, {"_id": 0}))  # ✅ use cleaned features
     if not data:
-        raise ValueError("No feature data found in FEATURE_COLLECTION.")
+        raise ValueError("No feature data found in CLEANED_FEATURE_COLLECTION.")
 
     df = pd.DataFrame(data)
 
     # Ensure features used for this model
     feature_cols = model_doc.get("features", [])
+    missing_cols = [f for f in feature_cols if f not in df.columns]
+    if missing_cols:
+        raise ValueError(f"Features missing in cleaned dataset: {missing_cols}")
+
     X = df[feature_cols].copy()
 
     # Convert all to numeric and fill missing
@@ -58,6 +66,7 @@ def _load_feature_dataframe(model_doc):
     X = X.fillna(0)
 
     return df, X, feature_cols
+
 
 # =====================================================
 # PUBLIC FUNCTIONS
@@ -87,6 +96,7 @@ def compute_global_shap(top_n=15):
     }).sort_values("importance", ascending=False)
 
     return importance_df.head(top_n)
+
 
 def compute_local_shap():
     """
