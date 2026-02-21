@@ -4,7 +4,6 @@ from config.mongo import get_database
 from config.constants import RAW_COLLECTION, CLEAN_COLLECTION
 from config.logging import logger
 
-
 def build_clean_dataset():
     logger.info("========== BUILD CLEAN DATASET STARTED ==========")
 
@@ -13,19 +12,18 @@ def build_clean_dataset():
     clean_col = db[CLEAN_COLLECTION]
 
     # -----------------------------
-    # LOAD RAW DATA
+    # LOAD RAW DATA (memory safe)
     # -----------------------------
-    data = list(raw_col.find({}, {"_id": 0}))
-    if not data:
+    cursor = raw_col.find({}, {"_id": 0})
+    df = pd.DataFrame(list(cursor))
+    if df.empty:
         raise ValueError("RAW collection is empty")
-
-    df = pd.DataFrame(data)
     logger.info(f"RAW rows loaded: {len(df)}")
 
     # -----------------------------
-    # TIMESTAMP VALIDATION
+    # TIMESTAMP VALIDATION + TIMEZONE AWARE
     # -----------------------------
-    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce", utc=True)
     df = df[df["timestamp"].notna()]
     df = df.sort_values("timestamp").reset_index(drop=True)
 
@@ -35,7 +33,7 @@ def build_clean_dataset():
     df = df.drop_duplicates(subset=["timestamp"], keep="last")
 
     # -----------------------------
-    # CRITICAL NUMERIC COLUMNS
+    # NUMERIC COLUMNS
     # -----------------------------
     numeric_cols = [
         "pm2_5", "pm10", "no2", "o3", "co", "so2",
@@ -43,53 +41,73 @@ def build_clean_dataset():
         "wind_direction", "precipitation"
     ]
 
-    # Set DatetimeIndex for time interpolation
     df = df.set_index("timestamp")
 
+    # -----------------------------
+    # CIRCULAR INTERPOLATION for wind_direction
+    # -----------------------------
     for col in numeric_cols:
-        if col in df.columns:
-            # Time-aware interpolation
-            df[col] = df[col].interpolate(method="time")
-            # Fill remaining NaNs at start/end
-            df[col] = df[col].ffill().bfill()
+        if col not in df.columns:
+            continue
+        if col == "wind_direction":
+            # Convert to radians
+            angles = np.deg2rad(df[col].values.astype(float))
+            sin_vals = np.sin(angles)
+            cos_vals = np.cos(angles)
+            sin_vals = pd.Series(sin_vals, index=df.index).interpolate(method="time").ffill().bfill()
+            cos_vals = pd.Series(cos_vals, index=df.index).interpolate(method="time").ffill().bfill()
+            df[col] = np.rad2deg(np.arctan2(sin_vals, cos_vals)) % 360
+        else:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+            df[col] = df[col].interpolate(method="time").ffill().bfill()
 
     # -----------------------------
     # STRICT HOURLY CONTINUITY
     # -----------------------------
-    full_range = pd.date_range(df.index.min(), df.index.max(), freq="H")
+    full_range = pd.date_range(df.index.min(), df.index.max(), freq="H", tz='UTC')
     missing_hours = full_range.difference(df.index)
-
     if len(missing_hours) > 0:
         logger.warning(f"Missing timestamps detected: {len(missing_hours)} hours")
         df = df.reindex(full_range)
         for col in numeric_cols:
             if col in df.columns:
-                df[col] = df[col].interpolate(method="time").ffill().bfill()
+                if col == "wind_direction":
+                    angles = np.deg2rad(df[col].values.astype(float))
+                    sin_vals = np.sin(angles)
+                    cos_vals = np.cos(angles)
+                    sin_vals = pd.Series(sin_vals, index=df.index).interpolate(method="time").ffill().bfill()
+                    cos_vals = pd.Series(cos_vals, index=df.index).interpolate(method="time").ffill().bfill()
+                    df[col] = np.rad2deg(np.arctan2(sin_vals, cos_vals)) % 360
+                else:
+                    df[col] = df[col].interpolate(method="time").ffill().bfill()
 
     df = df.reset_index().rename(columns={"index": "timestamp"})
 
     # -----------------------------
-    # FINAL CLEANUP FOR MONGO
+    # REPLACE NaN / NaT with None for Mongo
     # -----------------------------
     df = df.replace({np.nan: None, pd.NaT: None})
 
-    logger.info(f"CLEAN rows ready: {len(df)}")
+    # -----------------------------
+    # SAVE TO TEMP COLLECTION AND SWAP
+    # -----------------------------
+    temp_collection = CLEAN_COLLECTION + "_tmp"
+    temp_col = db[temp_collection]
 
+    temp_col.delete_many({})
     records = df.to_dict("records")
-
-    # -----------------------------
-    # SAVE TO CLEAN COLLECTION
-    # -----------------------------
-    logger.info("Dropping old CLEAN_COLLECTION and inserting fresh data...")
-    clean_col.delete_many({})
     if records:
-        clean_col.insert_many(records)
+        temp_col.insert_many(records)
+
+    # Atomic swap: drop old clean collection and rename tmp
+    clean_col.drop()
+    db[temp_collection].rename(CLEAN_COLLECTION)
 
     # -----------------------------
     # SUMMARY
     # -----------------------------
-    total_rows = clean_col.count_documents({})
-    sample = clean_col.find_one({}, {"_id": 0})
+    total_rows = db[CLEAN_COLLECTION].count_documents({})
+    sample = db[CLEAN_COLLECTION].find_one({}, {"_id": 0})
     total_cols = len(sample.keys()) if sample else 0
 
     print("\n========== CLEAN DATASET READY ==========")

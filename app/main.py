@@ -1,9 +1,10 @@
 import sys
 import os
+from datetime import datetime, timedelta
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import streamlit as st
-from datetime import datetime, timedelta
 
 from app_config import APP_CONFIG, CITY_CONFIG
 from services.mongo_service import MongoService
@@ -24,6 +25,46 @@ st.set_page_config(
 )
 
 # =====================================================
+# GLOBAL STYLES
+# =====================================================
+st.markdown("""
+<style>
+.big-aqi {
+    font-size:72px;
+    font-weight:800;
+}
+.hero-card {
+    padding:40px;
+    border-radius:24px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.25);
+}
+.small-text {
+    font-size:14px;
+    opacity:0.85;
+}
+.chip {
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:14px;
+    color:white;
+    display:inline-block;
+    margin-top:8px;
+}
+.forecast-chip {
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:14px;
+    color:white;
+    display:inline-block;
+    margin-top:10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# =====================================================
 # HELPERS
 # =====================================================
 def safe_round(val, n=2):
@@ -32,37 +73,34 @@ def safe_round(val, n=2):
     except:
         return None
 
-def safe_str(val):
-    return str(val) if val is not None else "N/A"
-
-def format_date(dt_obj):
+def format_relative_time(dt_obj):
     if not dt_obj:
         return "N/A"
     try:
         if isinstance(dt_obj, str):
             dt_obj = datetime.fromisoformat(dt_obj)
-        return dt_obj.strftime("%a, %d %b")
+        diff = datetime.utcnow() - dt_obj
+        mins = int(diff.total_seconds() / 60)
+        if mins < 1:
+            return "Just now"
+        if mins < 60:
+            return f"{mins} minutes ago"
+        hrs = mins // 60
+        if hrs < 24:
+            return f"{hrs} hours ago"
+        return f"{hrs//24} days ago"
     except:
         return "N/A"
 
-def chip(label: str, bg: str):
-    if not label:
-        label = "Unknown"
-    if not bg:
-        bg = "#95a5a6"
-    return f"""
-    <span style="
-        display:inline-block;
-        padding:6px 12px;
-        border-radius:999px;
-        font-size:14px;
-        font-weight:700;
-        background:{bg};
-        color:white;
-    ">
-        {label}
-    </span>
-    """
+def health_tip(category):
+    return {
+        "Good": "Perfect for outdoor activities 🌿",
+        "Moderate": "Sensitive individuals should be cautious.",
+        "Unhealthy (Sensitive)": "Limit prolonged outdoor exertion.",
+        "Unhealthy": "Mask recommended outdoors 😷",
+        "Very Unhealthy": "Avoid outdoor activities.",
+        "Hazardous": "Stay indoors and keep windows closed."
+    }.get(category, "")
 
 # =====================================================
 # HEADER
@@ -78,137 +116,158 @@ latest_raw = MongoService.get_latest_raw()
 latest_features = MongoService.get_latest_features()
 latest_pred_log = MongoService.get_latest_prediction_log()
 
-if not latest_raw:
-    st.error("❌ No RAW weather data found. Run ingestion pipeline first.")
-    st.stop()
-
-if not latest_features:
-    st.error("❌ No FEATURE data found. Run feature pipeline first.")
-    st.stop()
-
-if not latest_pred_log:
-    st.error("❌ No prediction data found. Run prediction pipeline first.")
+if not (latest_raw and latest_features and latest_pred_log):
+    st.error("Required data missing. Run pipelines first.")
     st.stop()
 
 # =====================================================
-# CURRENT AQI + WEATHER
+# TODAY AQI HERO
 # =====================================================
 current_aqi = latest_features.get("aqi")
+aqi_val = safe_round(current_aqi)
+category = aqi_category(current_aqi)
+color = aqi_color_from_value(current_aqi)
 
-# ================= CHANGE MADE HERE =================
-data_time = latest_features.get("feature_generated_at")
-pipeline_time = latest_features.get("feature_generated_at")
-# =====================================================
+st.subheader("Today")
 
-col1, col2 = st.columns([1.2, 1])
-
-with col1:
-    st.subheader("Current AQI (Right Now)")
-
-    aqi_val = safe_round(current_aqi)
-    cat = aqi_category(current_aqi)
-
-    if aqi_val is None:
-        st.warning("AQI value missing in latest feature document.")
-    else:
-        st.metric("AQI", aqi_val)
-
-    st.markdown(
-        chip(cat, aqi_color_from_value(current_aqi)),
-        unsafe_allow_html=True
-    )
-
-    st.caption(
-        f"Data time: {safe_str(data_time)} | "
-        f"Pipeline run: {safe_str(pipeline_time)}"
-    )
-
-with col2:
-    st.subheader("🌤️ Weather Snapshot")
-
-    w1, w2 = st.columns(2)
-    with w1:
-        st.metric("Temperature (°C)", safe_round(latest_raw.get("temperature")))
-        st.metric("Humidity (%)", safe_round(latest_raw.get("humidity")))
-    with w2:
-        st.metric("Wind Speed (m/s)", safe_round(latest_raw.get("wind_speed")))
-        st.metric("Pressure (hPa)", safe_round(latest_raw.get("pressure")))
+st.markdown(
+    f"""
+    <div class="hero-card" style="
+        background:linear-gradient(135deg,{color}30,{color}10);
+        border:2px solid {color};
+    ">
+        <div class="big-aqi">{aqi_val}</div>
+        <div class="chip" style="background:{color};">{category}</div>
+        <div class="small-text" style="margin-top:14px;">
+            {health_tip(category)}
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.divider()
 
 # =====================================================
-# FORECAST SECTION
+# WEATHER SNAPSHOT
+# =====================================================
+st.subheader("Weather Snapshot")
+
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("🌡️ Temp (°C)", safe_round(latest_raw.get("temperature")))
+c2.metric("💧 Humidity (%)", safe_round(latest_raw.get("humidity")))
+c3.metric("💨 Wind (m/s)", safe_round(latest_raw.get("wind_speed")))
+c4.metric("🧭 Pressure (hPa)", safe_round(latest_raw.get("pressure")))
+
+st.divider()
+
+# =====================================================
+# 3-DAY FORECAST (FINAL UI)
 # =====================================================
 st.subheader("📅 3-Day Forecast")
 
 preds = latest_pred_log.get("predictions", {})
-
-aqi_24h = preds.get("target_aqi_t_plus_24h")
-class_24h = preds.get("target_aqi_class_t_plus_24h")
-class_48h = preds.get("target_aqi_class_t_plus_48h")
-class_72h = preds.get("target_aqi_class_t_plus_72h")
-
-# =====================================================
-# DATE LABELS
-# =====================================================
 now = datetime.now()
-date_1 = now + timedelta(days=1)
-date_2 = now + timedelta(days=2)
-date_3 = now + timedelta(days=3)
+
+def forecast_card(title, date, color, content):
+    st.markdown(
+        f"""
+        <div style="
+            padding:30px;
+            border-radius:22px;
+            border:2px solid {color};
+            background:linear-gradient(135deg,{color}25,{color}08);
+            box-shadow:0 8px 28px rgba(0,0,0,0.25);
+        ">
+            <div style="font-size:15px; opacity:0.75;">{title}</div>
+            <div style="font-size:22px; font-weight:800; margin-bottom:16px;">
+                {date}
+            </div>
+            {content}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+col1, col2, col3 = st.columns(3)
+
+# Tomorrow (AQI value)
+with col1:
+    val = safe_round(preds.get("target_aqi_t_plus_24h"))
+    col = aqi_color_from_value(val)
+    lab = aqi_category(val)
+
+    forecast_card(
+        "Tomorrow",
+        (now + timedelta(days=1)).strftime("%a, %d %b"),
+        col,
+        f"""
+        <div style="font-size:52px; font-weight:900;">{val}</div>
+        <div class="forecast-chip" style="background:{col};">{lab}</div>
+        <div class="small-text" style="margin-top:12px;">
+            {health_tip(lab)}
+        </div>
+        """
+    )
+
+# Day After
+with col2:
+    info = aqi_class_info(preds.get("target_aqi_class_t_plus_48h"))
+    col = aqi_class_color(preds.get("target_aqi_class_t_plus_48h"))
+
+    forecast_card(
+        "Day After",
+        (now + timedelta(days=2)).strftime("%a, %d %b"),
+        col,
+        f"""
+        <div class="forecast-chip" style="background:{col};">
+            {info['label']}
+        </div>
+        <div class="small-text" style="margin-top:12px;">
+            Expected Range: <b>{info['range']}</b><br>
+            {health_tip(info['label'])}
+        </div>
+        """
+    )
+
+# 3rd Day
+with col3:
+    info = aqi_class_info(preds.get("target_aqi_class_t_plus_72h"))
+    col = aqi_class_color(preds.get("target_aqi_class_t_plus_72h"))
+
+    forecast_card(
+        "3rd Day",
+        (now + timedelta(days=3)).strftime("%a, %d %b"),
+        col,
+        f"""
+        <div class="forecast-chip" style="background:{col};">
+            {info['label']}
+        </div>
+        <div class="small-text" style="margin-top:12px;">
+            Expected Range: <b>{info['range']}</b><br>
+            {health_tip(info['label'])}
+        </div>
+        """
+    )
 
 # =====================================================
-# FORECAST CARDS
+# FOOTER
 # =====================================================
-c1, c2, c3 = st.columns(3)
-
-# ---------- DAY 1 (Regression AQI) ----------
-with c1:
-    st.markdown(f"### {format_date(date_1)}")
-
-    aqi_24h_val = safe_round(aqi_24h)
-
-    if aqi_24h_val is None:
-        st.warning("Prediction missing")
-        st.markdown(chip("Unknown", "#95a5a6"), unsafe_allow_html=True)
-        st.caption("Expected range: N/A")
-    else:
-        label = aqi_category(aqi_24h_val)
-        color = aqi_color_from_value(aqi_24h_val)
-
-        st.metric("Predicted AQI", aqi_24h_val)
-        st.markdown(chip(label, color), unsafe_allow_html=True)
-
-        # Expected range derived from regression AQI
-        if aqi_24h_val <= 50:
-            range_str = "0 – 50"
-        elif aqi_24h_val <= 100:
-            range_str = "51 – 100"
-        elif aqi_24h_val <= 150:
-            range_str = "101 – 150"
-        elif aqi_24h_val <= 200:
-            range_str = "151 – 200"
-        elif aqi_24h_val <= 300:
-            range_str = "201 – 300"
-        else:
-            range_str = "301+"
-
-        st.caption(f"Expected range: {range_str}")
-
-# ---------- DAY 2 (Classification AQI Class) ----------
-with c2:
-    st.markdown(f"### {format_date(date_2)}")
-
-    info = aqi_class_info(class_48h) or {}
-    st.markdown(chip(info.get("label", "Unknown"), aqi_class_color(class_48h)), unsafe_allow_html=True)
-    st.caption(f"Expected range: {info.get('range', 'N/A')}")
-
-# ---------- DAY 3 (Classification AQI Class) ----------
-with c3:
-    st.markdown(f"### {format_date(date_3)}")
-
-    info = aqi_class_info(class_72h) or {}
-    st.markdown(chip(info.get("label", "Unknown"), aqi_class_color(class_72h)), unsafe_allow_html=True)
-    st.caption(f"Expected range: {info.get('range', 'N/A')}")
-
 st.divider()
-st.caption(f"Forecast generated at: {safe_str(latest_pred_log.get('created_at'))}")
+st.caption(
+    f"Updated {format_relative_time(latest_features.get('timestamp'))} | "
+    f"Forecast generated {format_relative_time(latest_pred_log.get('created_at'))}"
+)
+
+prob = latest_pred_log.get("class_probability_48h", 0)
+
+if prob >= 0.8:
+    confidence = "▮▮▮▮▮"
+elif prob >= 0.65:
+    confidence = "▮▮▮▮▯"
+elif prob >= 0.5:
+    confidence = "▮▮▮▯▯"
+else:
+    confidence = "▮▮▯▯▯"
+
+st.caption(f"Classification Confidence (based on class probability): {confidence}")

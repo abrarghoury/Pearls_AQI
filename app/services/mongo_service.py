@@ -19,7 +19,13 @@ class MongoService:
     @classmethod
     def get_db(cls):
         if cls._client is None:
-            cls._client = MongoClient(settings.MONGO_URI)
+            cls._client = MongoClient(
+                settings.MONGO_URI,
+                serverSelectionTimeoutMS=5000,   # Prevent long hanging
+                connectTimeoutMS=5000,
+                socketTimeoutMS=5000,
+                retryWrites=True
+            )
             cls._db = cls._client[settings.MONGO_DB_NAME]
         return cls._db
 
@@ -34,7 +40,7 @@ class MongoService:
         """
         db = cls.get_db()
         return db[CLEANED_FEATURE_COLLECTION].find_one(
-            sort=[("timestamp", -1)],  # Use actual timestamp
+            sort=[("timestamp", -1)],
             projection={"_id": 0}
         )
 
@@ -83,7 +89,7 @@ class MongoService:
         data = list(
             db[CLEANED_FEATURE_COLLECTION]
             .find(
-                {}, 
+                {},
                 {"_id": 0, "timestamp": 1, "aqi": 1}
             )
             .sort("timestamp", -1)

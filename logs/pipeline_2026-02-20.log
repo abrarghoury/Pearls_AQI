@@ -1,0 +1,70 @@
+2026-02-20 16:00:18,005 - AQI_PIPELINE - INFO - Starting AQI historical backfill pipeline...
+2026-02-20 16:00:18,005 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 16:00:20,277 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 16:00:20,279 - AQI_PIPELINE - INFO - Backfill window: 2025-08-24 -> 2026-02-20
+2026-02-20 16:00:20,280 - AQI_PIPELINE - INFO - Fetching Air Pollution historical data...
+2026-02-20 16:00:28,860 - AQI_PIPELINE - INFO - AQI rows fetched: 4248
+2026-02-20 16:00:28,888 - AQI_PIPELINE - INFO - Fetching Weather historical data...
+2026-02-20 16:00:31,533 - AQI_PIPELINE - INFO - Weather rows fetched: 4344
+2026-02-20 16:00:31,696 - AQI_PIPELINE - INFO - Aligning timestamps on full hourly grid...
+2026-02-20 16:00:32,182 - AQI_PIPELINE - INFO - Dropped empty AQI rows: 0
+2026-02-20 16:00:32,366 - AQI_PIPELINE - INFO - Final merged rows: 4344
+2026-02-20 16:00:57,237 - AQI_PIPELINE - INFO - Records upserted: 4344
+2026-02-20 16:00:57,563 - AQI_PIPELINE - INFO - Backfill pipeline completed.
+2026-02-20 16:02:39,625 - AQI_PIPELINE - INFO - ========== BUILD CLEAN DATASET STARTED ==========
+2026-02-20 16:02:39,625 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 16:02:41,653 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 16:02:43,954 - AQI_PIPELINE - INFO - RAW rows loaded: 4344
+2026-02-20 16:02:51,006 - AQI_PIPELINE - INFO - ========== BUILD CLEAN DATASET COMPLETED ==========
+2026-02-20 16:08:29,014 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED (CASE B HYBRID) ==========
+2026-02-20 16:08:29,015 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 16:08:30,772 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 16:08:33,141 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4344
+2026-02-20 16:21:25,233 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | ROWS=4200 | COLS=108 ==========
+2026-02-20 16:21:25,411 - AQI_PIPELINE - INFO - Sample feature keys: ['timestamp', 'aqi', 'aqi_delta_1h', 'aqi_delta_24h', 'aqi_delta_3h', 'aqi_delta_6h', 'aqi_lag_12h', 'aqi_lag_1h', 'aqi_lag_24h', 'aqi_lag_3h', 'aqi_lag_48h', 'aqi_lag_6h', 'aqi_lag_72h', 'aqi_roll_mean_12h', 'aqi_roll_mean_24h', 'aqi_roll_mean_6h', 'aqi_roll_std_12h', 'aqi_roll_std_24h', 'city', 'co'] ...
+2026-02-20 16:26:54,833 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) | MODE=training ==========
+2026-02-20 16:26:54,834 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 16:26:57,661 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 16:27:13,796 - AQI_PIPELINE - INFO - Feature rows loaded: 4200
+2026-02-20 16:36:53,441 - AQI_PIPELINE - INFO - Inserted/Updated rows: 4200 | Total cleaned rows now: 4200
+2026-02-20 16:36:53,449 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4200 | MODE=training ==========
+2026-02-20 19:27:25,874 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED (CASE B HYBRID) ==========
+2026-02-20 19:27:25,925 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 19:27:30,883 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 19:27:52,602 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4344
+2026-02-20 19:43:03,854 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | ROWS=4272 | COLS=24 ==========
+2026-02-20 19:46:21,502 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) | MODE=training ==========
+2026-02-20 19:46:21,502 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 19:46:58,056 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) | MODE=training ==========
+2026-02-20 19:46:58,056 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 19:47:01,431 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 19:47:31,235 - AQI_PIPELINE - INFO - Feature rows loaded: 4200
+2026-02-20 20:07:03,239 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED (CASE B HYBRID) ==========
+2026-02-20 20:07:03,239 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 20:07:06,809 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 20:07:08,909 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4344
+2026-02-20 20:20:18,442 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | ROWS=4200 | COLS=108 ==========
+2026-02-20 20:20:18,551 - AQI_PIPELINE - INFO - Sample feature keys: ['timestamp', 'aqi', 'aqi_delta_1h', 'aqi_delta_24h', 'aqi_delta_3h', 'aqi_delta_6h', 'aqi_lag_12h', 'aqi_lag_1h', 'aqi_lag_24h', 'aqi_lag_3h', 'aqi_lag_48h', 'aqi_lag_6h', 'aqi_lag_72h', 'aqi_roll_mean_12h', 'aqi_roll_mean_24h', 'aqi_roll_mean_6h', 'aqi_roll_std_12h', 'aqi_roll_std_24h', 'city', 'co'] ...
+2026-02-20 20:20:55,810 - AQI_PIPELINE - INFO - ========== EXPORT clean_aqi TO CSV STARTED ==========
+2026-02-20 20:20:55,811 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 20:21:01,963 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 20:21:04,605 - AQI_PIPELINE - INFO - CSV file created successfully: clean_aqi_export_20260220_152104.csv
+2026-02-20 20:22:26,090 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) | MODE=training ==========
+2026-02-20 20:22:26,091 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 20:22:33,763 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED (CASE B) | MODE=training ==========
+2026-02-20 20:22:33,764 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 20:22:35,050 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 20:22:46,278 - AQI_PIPELINE - INFO - Feature rows loaded: 4200
+2026-02-20 20:34:30,637 - AQI_PIPELINE - INFO - Inserted/Updated rows: 4200 | Total cleaned rows now: 4200
+2026-02-20 20:34:30,699 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4200 | MODE=training ==========
+2026-02-20 21:02:02,222 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED (SAFE VERSION) ==========
+2026-02-20 21:02:02,222 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 21:02:05,042 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 21:02:09,154 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4344
+2026-02-20 21:11:22,493 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=training | ROWS=4272 ==========
+2026-02-20 21:15:22,219 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=TRAINING ==========
+2026-02-20 21:15:22,220 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-20 21:15:24,381 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-20 21:15:29,330 - AQI_PIPELINE - INFO - Loaded feature rows: 4272
+2026-02-20 21:16:02,112 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 4272 | Modified: 0
+2026-02-20 21:16:02,121 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4272 | MODE=TRAINING ==========
