@@ -176,6 +176,7 @@ if predictions:
 
     prediction_document = {
         "city": settings.CITY,
+        "predicted_at": datetime.utcnow(),
         "created_at": datetime.utcnow(),
         "feature_generated_at": latest_row.get("feature_generated_at"),
         "predictions": predictions,

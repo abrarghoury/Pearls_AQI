@@ -312,6 +312,7 @@ for target_name in ALL_TARGETS:
                 "f1_weighted": best_metrics.get("f1_weighted"),
 
                 "training_date": datetime.utcnow(),
+                "trained_at": datetime.utcnow(),
                 "training_duration_seconds": training_duration_seconds,
                 "status": "active",
                 "model_path": model_path,
