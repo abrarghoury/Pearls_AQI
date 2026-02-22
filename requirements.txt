@@ -19,3 +19,5 @@ evidently
 joblib
 plotly
 imbalanced-learn
+pymongo[srv]
+dnspython

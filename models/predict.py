@@ -1,6 +1,6 @@
 # =====================================================
 # PEARLS AQI — ADVANCED PREDICTION PIPELINE (FINAL)
-# Load Active Models + Predict + Save to MongoDB Atlas
+# Load Active Models from MongoDB Atlas (GridFS) + Predict
 # Fully Compatible with Updated Training Pipeline
 # =====================================================
 
@@ -11,6 +11,8 @@ import pandas as pd
 from datetime import datetime
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from io import BytesIO
+import gridfs
 
 from config.settings import settings
 from config.constants import (
@@ -34,6 +36,9 @@ db = client[settings.MONGO_DB_NAME]
 feature_col = db[CLEANED_FEATURE_COLLECTION]
 registry_col = db[MODEL_COLLECTION]
 pred_col = db[PREDICTION_COLLECTION]
+
+# GridFS instance for model files
+fs = gridfs.GridFS(db)
 
 print("Connected to MongoDB Atlas")
 
@@ -85,7 +90,8 @@ for target in TARGETS:
         print(f"No active model found for {target}")
         continue
 
-    model_path = model_doc.get("model_path")
+    # GridFS file_id stored during training
+    gridfs_file_id = model_doc.get("gridfs_file_id")
     features_used = model_doc.get("features", [])
     model_name = model_doc.get("model_name", "unknown")
     task_type = model_doc.get("task_type", "unknown")
@@ -94,19 +100,17 @@ for target in TARGETS:
     training_date = model_doc.get("training_date")
 
     # -------------------------------------------------
-    # VALIDATE MODEL FILE
+    # LOAD MODEL FROM GRIDFS
     # -------------------------------------------------
-    if not model_path or not os.path.exists(model_path):
-        print(f"Model file missing: {model_path}")
+    if not gridfs_file_id:
+        print(f"No GridFS file ID for {target}. Skipping.")
         continue
 
-    # -------------------------------------------------
-    # LOAD MODEL
-    # -------------------------------------------------
     try:
-        model = joblib.load(model_path)
+        model_bytes = fs.get(gridfs_file_id).read()
+        model = joblib.load(BytesIO(model_bytes))
     except Exception as e:
-        print(f"Failed to load model: {e}")
+        print(f"Failed to load model from GridFS: {e}")
         continue
 
     # -------------------------------------------------
@@ -163,7 +167,7 @@ for target in TARGETS:
         "version": version,
         "pipeline_version": pipeline_version,
         "training_date": training_date,
-        "model_path": model_path
+        "gridfs_file_id": str(gridfs_file_id)
     }
 
     print(f"Model Used: {model_name} (v{version})")
@@ -186,7 +190,6 @@ if predictions:
     }
 
     pred_col.insert_one(prediction_document)
-
     print("\nPredictions + feature snapshot saved to MongoDB:", PREDICTION_COLLECTION)
 
 else:
