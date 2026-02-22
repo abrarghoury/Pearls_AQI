@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 
 from app_config import APP_CONFIG, CITY_CONFIG
+
 from services.mongo_service import MongoService
 from services.aqi_utils import (
     aqi_category,
@@ -255,9 +256,10 @@ with col3:
 # =====================================================
 st.divider()
 st.caption(
-    f"Updated {format_relative_time(latest_features.get('timestamp'))} | "
-    f"Forecast generated {format_relative_time(latest_pred_log.get('created_at'))}"
+    f"Updated {format_relative_time(latest_features.get('validation_done_at'))} | "
+    f"Forecast generated {format_relative_time(latest_pred_log.get('predicted_at'))}"
 )
+
 
 prob = latest_pred_log.get("class_probability_48h", 0)
 

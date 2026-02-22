@@ -1,6 +1,5 @@
 # =========================================================
 # FEATURE ENGINEERING PIPELINE (PRODUCTION SAFE)
-# CASE B – HYBRID FORECASTING
 # =========================================================
 
 import pandas as pd
@@ -26,23 +25,18 @@ AQI_BREAKPOINTS = {
     "pm2_5": [(0.0, 12.0, 0, 50), (12.1, 35.4, 51, 100),
               (35.5, 55.4, 101, 150), (55.5, 150.4, 151, 200),
               (150.5, 250.4, 201, 300), (250.5, 500.4, 301, 500)],
-
     "pm10": [(0, 54, 0, 50), (55, 154, 51, 100),
              (155, 254, 101, 150), (255, 354, 151, 200),
              (355, 424, 201, 300), (425, 604, 301, 500)],
-
     "no2": [(0, 53, 0, 50), (54, 100, 51, 100),
             (101, 360, 101, 150), (361, 649, 151, 200),
             (650, 1249, 201, 300), (1250, 2049, 301, 500)],
-
     "so2": [(0, 35, 0, 50), (36, 75, 51, 100),
             (76, 185, 101, 150), (186, 304, 151, 200),
             (305, 604, 201, 300), (605, 1004, 301, 500)],
-
     "o3": [(0, 54, 0, 50), (55, 70, 51, 100),
            (71, 85, 101, 150), (86, 105, 151, 200),
            (106, 200, 201, 300)],
-
     "co": [(0.0, 4.4, 0, 50), (4.5, 9.4, 51, 100),
            (9.5, 12.4, 101, 150), (12.5, 15.4, 151, 200),
            (15.5, 30.4, 201, 300), (30.5, 50.4, 301, 500)]
@@ -86,10 +80,10 @@ def aqi_numeric_to_class(aqi_value):
 
 
 # =========================================================
-# MAIN PIPELINE
+# FEATURE PIPELINE
 # =========================================================
-def run_feature_pipeline_case_b():
-    logger.info("========== FEATURE PIPELINE STARTED (SAFE VERSION) ==========")
+def run_feature_pipeline():
+    logger.info("========== FEATURE PIPELINE STARTED ==========")
 
     db = get_database()
     clean_col = db[CLEAN_COLLECTION]
@@ -115,7 +109,7 @@ def run_feature_pipeline_case_b():
     df = df.set_index("timestamp")
 
     # -----------------------------------------------------
-    # SAFE NUMERIC CONVERSION (NO ZERO FILL)
+    # SAFE NUMERIC CONVERSION
     # -----------------------------------------------------
     for col in POLLUTANT_FEATURES + WEATHER_FEATURES:
         if col in df.columns:
@@ -182,25 +176,31 @@ def run_feature_pipeline_case_b():
         df["no2_o3_ratio"] = df["no2"] / (df["o3"] + 1e-6)
 
     # =====================================================
-    # TARGET SHIFT (TRAINING ONLY)
+    # TARGET SHIFT (SAFE)
     # =====================================================
-    mode = getattr(settings, "PIPELINE_MODE", "training")
+    mode = getattr(settings, "PIPELINE_MODE", "training").lower()
 
     if mode == "training":
-        df["target_aqi_t_plus_24h"] = df[TARGET_COLUMN].shift(-24)
-        df["target_aqi_class_t_plus_24h"] = df["target_aqi_t_plus_24h"].apply(aqi_numeric_to_class)
-        df["target_aqi_class_t_plus_48h"] = df[TARGET_COLUMN].shift(-48).apply(aqi_numeric_to_class)
-        df["target_aqi_class_t_plus_72h"] = df[TARGET_COLUMN].shift(-72).apply(aqi_numeric_to_class)
+        # Generate targets only if enough rows exist
+        n_rows = len(df)
+        max_shift = 72
+        if n_rows > max_shift:
+            df["target_aqi_t_plus_24h"] = df[TARGET_COLUMN].shift(-24)
+            df["target_aqi_class_t_plus_24h"] = df["target_aqi_t_plus_24h"].apply(aqi_numeric_to_class)
+            df["target_aqi_class_t_plus_48h"] = df[TARGET_COLUMN].shift(-48).apply(aqi_numeric_to_class)
+            df["target_aqi_class_t_plus_72h"] = df[TARGET_COLUMN].shift(-72).apply(aqi_numeric_to_class)
 
-        # DROP ONLY rows where targets missing
-        df = df.dropna(subset=[
-            "target_aqi_t_plus_24h",
-            "target_aqi_class_t_plus_24h",
-            "target_aqi_class_t_plus_48h",
-            "target_aqi_class_t_plus_72h"
-        ])
-
+            # Drop rows where targets missing
+            df = df.dropna(subset=[
+                "target_aqi_t_plus_24h",
+                "target_aqi_class_t_plus_24h",
+                "target_aqi_class_t_plus_48h",
+                "target_aqi_class_t_plus_72h"
+            ])
+        else:
+            logger.warning("Not enough rows to generate 24/48/72h targets. Skipping target shift.")
     else:
+        # Inference → last row only, no drop
         df = df.iloc[[-1]]
 
     # -----------------------------------------------------
@@ -212,7 +212,7 @@ def run_feature_pipeline_case_b():
     df = df.replace({np.nan: None, pd.NaT: None})
 
     # -----------------------------------------------------
-    # UPSERT (NO DELETE – SAFE FOR HOURLY RUN)
+    # UPSERT (SAFE FOR HOURLY RUN)
     # -----------------------------------------------------
     records = df.to_dict("records")
 
@@ -223,10 +223,22 @@ def run_feature_pipeline_case_b():
             upsert=True
         )
 
+    # -----------------------------------------------------
+    # SUMMARY
+    # -----------------------------------------------------
+    total_cols = df.shape[1]
+    column_names = df.columns.tolist()
+
     logger.info(
-        f"========== FEATURE PIPELINE COMPLETED | MODE={mode} | ROWS={len(df)} =========="
+        f"========== FEATURE PIPELINE COMPLETED | MODE={mode} | ROWS={len(df)} | COLUMNS={total_cols} =========="
     )
+
+    print("\n===== FEATURE PIPELINE SUMMARY =====")
+    print(f"Rows processed: {len(df)}")
+    print(f"Columns count: {total_cols}")
+    print("Column names:", column_names)
+    print("=====================================")
 
 
 if __name__ == "__main__":
-    run_feature_pipeline_case_b()
+    run_feature_pipeline()
