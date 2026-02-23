@@ -121,6 +121,8 @@ if not (latest_raw and latest_features and latest_pred_log):
     st.error("Required data missing. Run pipelines first.")
     st.stop()
 
+
+st.write("PRED timestamp:", latest_pred_log.get("predicted_at"))
 # =====================================================
 # TODAY AQI HERO
 # =====================================================
@@ -256,20 +258,9 @@ with col3:
 # =====================================================
 st.divider()
 st.caption(
-    f"Updated {format_relative_time(latest_features.get('validation_done_at'))} | "
+    f"Updated {format_relative_time(latest_features.get('feature_generated_at'))} | "
     f"Forecast generated {format_relative_time(latest_pred_log.get('predicted_at'))}"
 )
 
 
-prob = latest_pred_log.get("class_probability_48h", 0)
 
-if prob >= 0.8:
-    confidence = "▮▮▮▮▮"
-elif prob >= 0.65:
-    confidence = "▮▮▮▮▯"
-elif prob >= 0.5:
-    confidence = "▮▮▮▯▯"
-else:
-    confidence = "▮▮▯▯▯"
-
-st.caption(f"Classification Confidence (based on class probability): {confidence}")

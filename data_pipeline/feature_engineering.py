@@ -200,8 +200,8 @@ def run_feature_pipeline():
         else:
             logger.warning("Not enough rows to generate 24/48/72h targets. Skipping target shift.")
     else:
-        # Inference → last row only, no drop
-        df = df.iloc[[-1]]
+        # Inference → keep all rows, no drop
+        df = df  # Keep all rows; latest row included
 
     # -----------------------------------------------------
     # FINAL CLEANUP
@@ -215,7 +215,6 @@ def run_feature_pipeline():
     # UPSERT (SAFE FOR HOURLY RUN)
     # -----------------------------------------------------
     records = df.to_dict("records")
-
     for rec in records:
         feature_col.update_one(
             {"timestamp": rec["timestamp"]},

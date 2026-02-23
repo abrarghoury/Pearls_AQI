@@ -149,8 +149,16 @@ def clean_features_case_b():
     # INFERENCE MODE
     # -----------------------------------------------------
     else:
+        # Pick only the last row for inference
         df = df.sort_values("timestamp").iloc[[-1]]
         df = df.replace([np.inf, -np.inf], np.nan)
+
+        # Ensure targets exist but allow NaNs
+        for t in ALL_TARGETS:
+            if t not in df.columns:
+                df[t] = None
+            else:
+                df[t] = df[t].where(pd.notna(df[t]), None)
 
     # -----------------------------------------------------
     # Clip AQI + Targets
@@ -185,9 +193,17 @@ def clean_features_case_b():
     # -----------------------------------------------------
     # Final Validation
     # -----------------------------------------------------
-    if df.isna().any().any():
-        bad_cols = df.columns[df.isna().any()].tolist()
-        raise ValueError(f"NaNs still present after cleaning. Bad cols: {bad_cols[:20]}")
+    if mode == "training":
+        # only enforce NaN-free for training
+        if df.isna().any().any():
+            bad_cols = df.columns[df.isna().any()].tolist()
+            raise ValueError(f"NaNs still present after cleaning. Bad cols: {bad_cols[:20]}")
+    else:
+        # inference → ignore ALL_TARGETS NaNs
+        non_target_cols = [c for c in df.columns if c not in ALL_TARGETS]
+        bad_cols = df[non_target_cols].columns[df[non_target_cols].isna().any()].tolist()
+        if bad_cols:
+            raise ValueError(f"NaNs still present after cleaning. Bad cols: {bad_cols[:20]}")
 
     df["feature_generated_at"] = datetime.utcnow()
     df["rows_after_cleaning"] = int(len(df))

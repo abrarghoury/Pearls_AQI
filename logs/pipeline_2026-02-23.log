@@ -1,0 +1,94 @@
+2026-02-23 09:04:52,754 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 09:04:52,754 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 09:04:54,701 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 09:04:56,347 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4396
+2026-02-23 09:12:50,251 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=training | ROWS=4324 | COLUMNS=90 ==========
+2026-02-23 09:17:43,043 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=TRAINING ==========
+2026-02-23 09:17:43,064 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 09:17:45,984 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 09:18:12,550 - AQI_PIPELINE - INFO - Loaded feature rows: 4324
+2026-02-23 09:20:07,983 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 4324 | Modified: 0
+2026-02-23 09:20:07,992 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4324 | MODE=TRAINING ==========
+2026-02-23 10:33:17,408 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 10:33:17,408 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 10:33:18,959 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 10:33:20,454 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 10:40:27,568 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=training | ROWS=4326 | COLUMNS=90 ==========
+2026-02-23 10:44:47,105 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=TRAINING ==========
+2026-02-23 10:44:47,106 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 10:44:49,761 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 10:44:55,090 - AQI_PIPELINE - INFO - Loaded feature rows: 4326
+2026-02-23 10:45:30,359 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 4326 | Modified: 0
+2026-02-23 10:45:30,359 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4326 | MODE=TRAINING ==========
+2026-02-23 10:57:59,723 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 10:57:59,726 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 10:58:01,632 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 10:58:02,490 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 11:06:07,955 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=training | ROWS=4326 ==========
+2026-02-23 11:08:41,211 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=TRAINING ==========
+2026-02-23 11:08:41,213 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:08:42,856 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:08:46,138 - AQI_PIPELINE - INFO - Loaded feature rows: 4326
+2026-02-23 11:24:22,046 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:24:22,048 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:24:24,292 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:24:25,928 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 11:30:18,347 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:30:18,348 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:30:19,933 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:30:21,539 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 11:31:36,411 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:31:36,411 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:31:37,784 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:31:39,092 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 11:38:46,604 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=training | ROWS=4326 | COLUMNS=90 ==========
+2026-02-23 11:39:19,688 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=TRAINING ==========
+2026-02-23 11:39:19,690 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:39:21,061 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:39:26,678 - AQI_PIPELINE - INFO - Loaded feature rows: 4326
+2026-02-23 11:40:10,123 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 4326 | Modified: 0
+2026-02-23 11:40:10,140 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4326 | MODE=TRAINING ==========
+2026-02-23 11:43:59,386 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:43:59,387 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:44:01,026 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:44:02,539 - AQI_PIPELINE - INFO - Loaded CLEAN rows: 4398
+2026-02-23 11:44:55,924 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:44:55,924 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:44:57,261 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:44:59,187 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 11:45:31,688 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:45:31,689 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:45:33,153 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:45:34,661 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 11:52:18,871 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:52:18,874 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:52:23,766 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:53:13,731 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 11:54:19,078 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 11:54:19,079 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 11:54:21,254 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 11:54:22,893 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4398
+2026-02-23 12:02:20,555 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=training | ROWS=4326 | COLUMNS=90 ==========
+2026-02-23 12:02:35,396 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=TRAINING ==========
+2026-02-23 12:02:35,397 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 12:02:37,074 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 12:02:43,987 - AQI_PIPELINE - INFO - Loaded feature rows: 4326
+2026-02-23 12:04:05,096 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 4326 | Modified: 0
+2026-02-23 12:04:05,097 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4326 | MODE=TRAINING ==========
+2026-02-23 12:33:52,345 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-23 12:33:52,346 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 12:33:53,514 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 12:33:54,478 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4400
+2026-02-23 12:40:57,046 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=inference | ROWS=4400 | COLUMNS=86 ==========
+2026-02-23 12:41:59,947 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=INFERENCE ==========
+2026-02-23 12:41:59,948 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 12:42:01,166 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 12:42:20,686 - AQI_PIPELINE - INFO - Loaded feature rows: 4400
+2026-02-23 12:42:20,880 - AQI_PIPELINE - WARNING - Dropping constant columns: ['aqi_delta_1h', 'aqi_delta_24h', 'aqi_delta_3h', 'aqi_delta_6h', 'aqi_lag_12h', 'aqi_lag_1h', 'aqi_lag_24h', 'aqi_lag_3h', 'aqi_lag_48h', 'aqi_lag_6h', 'aqi_lag_72h', 'aqi_roll_mean_12h', 'aqi_roll_mean_24h', 'aqi_roll_mean_6h', 'aqi_roll_std_12h', 'aqi_roll_std_24h', 'co', 'co_lag_12h', 'co_lag_1h', 'co_lag_24h', 'co_lag_3h', 'co_lag_6h', 'day_of_week', 'dow_cos', 'dow_sin', 'hour', 'hour_cos', 'hour_sin', 'humidity', 'humidity_lag_1h', 'humidity_lag_24h', 'is_weekend', 'month', 'no2', 'no2_lag_12h', 'no2_lag_1h', 'no2_lag_24h', 'no2_lag_3h', 'no2_lag_6h', 'no2_o3_ratio', 'o3', 'o3_lag_12h', 'o3_lag_1h', 'o3_lag_24h', 'o3_lag_3h', 'o3_lag_6h', 'pm10', 'pm10_lag_12h', 'pm10_lag_1h', 'pm10_lag_24h', 'pm10_lag_3h', 'pm10_lag_6h', 'pm2_5', 'pm2_5_lag_12h', 'pm2_5_lag_1h', 'pm2_5_lag_24h', 'pm2_5_lag_3h', 'pm2_5_lag_6h', 'pm2_5_pm10_ratio', 'precipitation', 'precipitation_lag_1h', 'precipitation_lag_24h', 'pressure', 'pressure_lag_1h', 'pressure_lag_24h', 'so2', 'so2_lag_12h', 'so2_lag_1h', 'so2_lag_24h', 'so2_lag_3h', 'so2_lag_6h', 'temperature', 'temperature_lag_1h', 'temperature_lag_24h', 'wind_direction', 'wind_direction_lag_1h', 'wind_direction_lag_24h', 'wind_speed', 'wind_speed_lag_1h', 'wind_speed_lag_24h']
+2026-02-23 12:47:13,491 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=INFERENCE ==========
+2026-02-23 12:47:13,492 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-23 12:47:15,274 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-23 12:47:22,519 - AQI_PIPELINE - INFO - Loaded feature rows: 4400
+2026-02-23 12:47:22,678 - AQI_PIPELINE - WARNING - Dropping constant columns: ['aqi_delta_1h', 'aqi_delta_24h', 'aqi_delta_3h', 'aqi_delta_6h', 'aqi_lag_12h', 'aqi_lag_1h', 'aqi_lag_24h', 'aqi_lag_3h', 'aqi_lag_48h', 'aqi_lag_6h', 'aqi_lag_72h', 'aqi_roll_mean_12h', 'aqi_roll_mean_24h', 'aqi_roll_mean_6h', 'aqi_roll_std_12h', 'aqi_roll_std_24h', 'co', 'co_lag_12h', 'co_lag_1h', 'co_lag_24h', 'co_lag_3h', 'co_lag_6h', 'day_of_week', 'dow_cos', 'dow_sin', 'hour', 'hour_cos', 'hour_sin', 'humidity', 'humidity_lag_1h', 'humidity_lag_24h', 'is_weekend', 'month', 'no2', 'no2_lag_12h', 'no2_lag_1h', 'no2_lag_24h', 'no2_lag_3h', 'no2_lag_6h', 'no2_o3_ratio', 'o3', 'o3_lag_12h', 'o3_lag_1h', 'o3_lag_24h', 'o3_lag_3h', 'o3_lag_6h', 'pm10', 'pm10_lag_12h', 'pm10_lag_1h', 'pm10_lag_24h', 'pm10_lag_3h', 'pm10_lag_6h', 'pm2_5', 'pm2_5_lag_12h', 'pm2_5_lag_1h', 'pm2_5_lag_24h', 'pm2_5_lag_3h', 'pm2_5_lag_6h', 'pm2_5_pm10_ratio', 'precipitation', 'precipitation_lag_1h', 'precipitation_lag_24h', 'pressure', 'pressure_lag_1h', 'pressure_lag_24h', 'so2', 'so2_lag_12h', 'so2_lag_1h', 'so2_lag_24h', 'so2_lag_3h', 'so2_lag_6h', 'temperature', 'temperature_lag_1h', 'temperature_lag_24h', 'wind_direction', 'wind_direction_lag_1h', 'wind_direction_lag_24h', 'wind_speed', 'wind_speed_lag_1h', 'wind_speed_lag_24h']
+2026-02-23 12:47:22,806 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 1 | Modified: 0
+2026-02-23 12:47:22,808 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=1 | MODE=INFERENCE ==========

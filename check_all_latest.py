@@ -1,64 +1,98 @@
-# check_model_debug.py
+# =====================================================
+# Pearls AQI — MongoDB Collection Health Check (Updated)
+# =====================================================
+
 import os
-import joblib
-import pandas as pd
 from pymongo import MongoClient
 from dotenv import load_dotenv
+import pandas as pd
+from config.settings import settings
+from config.constants import (
+    CLEANED_FEATURE_COLLECTION,
+    MODEL_COLLECTION,
+    PREDICTION_COLLECTION,
+)
 
+# -----------------------------------------------------
+# LOAD ENV
+# -----------------------------------------------------
 load_dotenv()
+client = MongoClient(settings.MONGO_URI)
+db = client[settings.MONGO_DB_NAME]
 
-# -------------------------------
-# MongoDB Connection
-# -------------------------------
-client = MongoClient(os.getenv("MONGO_URI"))
-db = client["pearls_aqi"]
+# -----------------------------------------------------
+# COLLECTIONS TO CHECK
+# -----------------------------------------------------
+collections_to_check = [
+    "raw_aqi_data",
+    "aqi_features",
+    "clean_aqi",
+    "feature_cleaned",
+    CLEANED_FEATURE_COLLECTION,
+    MODEL_COLLECTION,
+    PREDICTION_COLLECTION,
+    "fs.files",
+    "fs.chunks"
+]
 
-# -------------------------------
-# Get latest features
-# -------------------------------
-latest_feature = db.feature_cleaned.find_one(sort=[("validation_done_at", -1)])
-if latest_feature is None:
-    raise ValueError("No latest feature row found in feature_cleaned collection!")
+print("\n========== MONGO DB COLLECTION HEALTH CHECK ==========")
 
-df_latest = pd.DataFrame([latest_feature])
-print("Latest feature timestamp:", latest_feature.get("validation_done_at"))
+for col_name in collections_to_check:
+    col = db[col_name]
+    total_docs = col.count_documents({})
 
-# -------------------------------
-# Get active model
-# -------------------------------
-active_model = db.model_registry.find_one({"status": "active"})
-if active_model is None:
-    raise ValueError("No active model found in model_registry!")
+    # Fetch latest doc safely
+    latest_doc = col.find_one(sort=[("timestamp", -1)]) or col.find_one(sort=[("feature_generated_at", -1)]) or col.find_one()
+    
+    if latest_doc:
+        # Determine timestamp / unique id
+        ts = latest_doc.get("timestamp") or latest_doc.get("feature_generated_at") or latest_doc.get("_id")
+        if hasattr(ts, "generation_time"):  # ObjectId case
+            ts = ts.generation_time
 
-model_path = active_model.get("model_path")
-features = active_model.get("features", [])
+        # Count NaN / None values
+        if isinstance(latest_doc, dict):
+            nan_count = sum(pd.isna(v) for v in latest_doc.values())
+        else:
+            nan_count = "N/A"
+    else:
+        ts = "No documents"
+        nan_count = "N/A"
 
-print("\nModel path from DB:", model_path)
-print("Features used in model:", features[:5], "...")  # show first 5 features
+    print(f"\nCollection: {col_name}")
+    print(f"  Total Documents       : {total_docs}")
+    print(f"  Latest Timestamp / ID : {ts}")
+    print(f"  NaN / None values     : {nan_count}")
 
-# -------------------------------
-# Check file existence
-# -------------------------------
-full_model_path = os.path.abspath(model_path)
-print("Full absolute path:", full_model_path)
-print("File exists:", os.path.exists(full_model_path))
+# -----------------------------------------------------
+# CHECK ACTIVE MODELS
+# -----------------------------------------------------
+active_models = db[MODEL_COLLECTION].find({"status": "active"})
+print("\n========== ACTIVE MODELS ==========")
+if active_models.count() == 0:
+    print("No active models found.")
+else:
+    for m in active_models:
+        print(
+            f"  Target: {m.get('target')} | "
+            f"Model: {m.get('model_name')} | "
+            f"Version: {m.get('version')} | "
+            f"Trained at: {m.get('trained_at')} | "
+            f"Features used: {len(m.get('features', []))}"
+        )
 
-if not os.path.exists(full_model_path):
-    raise FileNotFoundError(f"Model file not found at: {full_model_path}")
-
-# -------------------------------
-# Fill missing features
-# -------------------------------
-for f in features:
-    if f not in df_latest.columns:
-        df_latest[f] = 0
-
-# -------------------------------
-# Load model & predict
-# -------------------------------
-try:
-    model = joblib.load(full_model_path)
-    pred = model.predict(df_latest[features])
-    print("\n✅ Prediction:", pred)
-except Exception as e:
-    print("\n❌ Error loading model or predicting:", str(e))
+# -----------------------------------------------------
+# CHECK LATEST PREDICTIONS
+# -----------------------------------------------------
+latest_pred = db[PREDICTION_COLLECTION].find_one(sort=[("predicted_at", -1)])
+print("\n========== LATEST PREDICTIONS ==========")
+if latest_pred:
+    pred_ts = latest_pred.get("predicted_at")
+    pred_targets = latest_pred.get("predictions", {})
+    print(f"Latest prediction saved at: {pred_ts}")
+    print(f"Predicted targets: {list(pred_targets.keys())}")
+    # Optional: print prediction values
+    for k, v in pred_targets.items():
+        print(f"  {k} --> {v}")
+else:
+    print("No predictions found in PREDICTION_COLLECTION")

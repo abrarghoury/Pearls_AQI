@@ -1,6 +1,10 @@
+# =====================================================
+# PEARLS AQI — MODEL REGISTRY DASHBOARD (UPDATED FOR NEW PIPELINE)
+# Streamlit | Dynamic Metrics | Multi-Day Models
+# =====================================================
+
 import streamlit as st
 import pandas as pd
-
 from app.services.mongo_service import MongoService
 
 # =====================================================
@@ -16,19 +20,14 @@ st.set_page_config(
 # =====================================================
 st.markdown("""
 <style>
-/* Block container padding */
-.block-container {
-    padding-top: 1.5rem;
-}
+.block-container { padding-top: 1.5rem; }
 
-/* Center the table container */
 .table-container {
     display: flex;
     justify-content: center;
     margin-top: 10px;
 }
 
-/* Table style */
 table {
     border-collapse: collapse;
     width: 90%;
@@ -40,7 +39,6 @@ table {
     overflow: hidden;
 }
 
-/* Table header */
 table thead th {
     background-color: #111827 !important;
     color: #f1f5f9 !important;
@@ -49,19 +47,16 @@ table thead th {
     padding: 12px !important;
 }
 
-/* Table cells */
 table tbody td {
     text-align: center !important;
     padding: 10px !important;
     border-bottom: 1px solid #334155;
 }
 
-/* Hover effect */
 table tbody tr:hover {
     background-color: #374151;
 }
 
-/* Status chips */
 .status-chip {
     padding: 6px 12px;
     border-radius: 12px;
@@ -69,11 +64,10 @@ table tbody tr:hover {
     font-weight: 600;
     display: inline-block;
 }
-.active-chip { background-color: #10b981; }  /* Green */
-.archived-chip { background-color: #f59e0b; } /* Amber */
-.unknown-chip { background-color: #6b7280; }  /* Gray */
+.active-chip { background-color: #10b981; }
+.archived-chip { background-color: #f59e0b; }
+.unknown-chip { background-color: #6b7280; }
 
-/* Metric cards */
 .metric-card {
     padding: 20px;
     border-radius: 18px;
@@ -112,26 +106,36 @@ if not model_data:
 df = pd.DataFrame(model_data)
 
 # =====================================================
-# CHECK REQUIRED COLUMNS
+# FLATTEN METRICS
 # =====================================================
-required_cols = ["model_name", "version", "training_date", "rmse", "accuracy", "status"]
-missing_cols = [col for col in required_cols if col not in df.columns]
+if "metrics" in df.columns:
+    metrics_df = pd.json_normalize(df["metrics"])
+    df = pd.concat([df.drop(columns=["metrics"]), metrics_df], axis=1)
 
-if missing_cols:
-    st.error(f"Missing expected columns in model registry: {missing_cols}")
-    st.stop()
+# =====================================================
+# SAFE DEFAULTS
+# =====================================================
+for col in ["rmse", "r2", "mae", "accuracy", "f1_weighted", "f1"]:
+    if col not in df.columns:
+        df[col] = None
 
 # =====================================================
 # FORMAT DATA
 # =====================================================
-df["training_date"] = pd.to_datetime(df["training_date"], errors="coerce")
-df["training_date"] = df["training_date"].dt.strftime("%Y-%m-%d %H:%M")
-df["status"] = df["status"].str.capitalize()
+if "training_date" in df.columns:
+    df["training_date"] = pd.to_datetime(df["training_date"], errors="coerce")
+    df["training_date"] = df["training_date"].dt.strftime("%Y-%m-%d %H:%M")
+
+if "status" in df.columns:
+    df["status"] = df["status"].fillna("unknown").str.capitalize()
+else:
+    df["status"] = "Unknown"
 
 def status_chip(val):
-    if val.lower() == "active":
+    val = str(val).lower()
+    if val == "active":
         return f'<div class="status-chip active-chip">Active ✅</div>'
-    elif val.lower() == "archived":
+    elif val == "archived":
         return f'<div class="status-chip archived-chip">Archived ⚠️</div>'
     else:
         return f'<div class="status-chip unknown-chip">Unknown ❓</div>'
@@ -139,7 +143,7 @@ def status_chip(val):
 df["status_chip"] = df["status"].apply(status_chip)
 
 # =====================================================
-# METRICS SUMMARY CARDS
+# SUMMARY CARDS
 # =====================================================
 total_models = len(df)
 active_models = len(df[df["status"].str.lower() == "active"])
@@ -153,6 +157,7 @@ with cols[0]:
         <div class="metric-label">Total Models</div>
     </div>
     """, unsafe_allow_html=True)
+
 with cols[1]:
     st.markdown(f"""
     <div class="metric-card">
@@ -160,6 +165,7 @@ with cols[1]:
         <div class="metric-label">Active Models</div>
     </div>
     """, unsafe_allow_html=True)
+
 with cols[2]:
     st.markdown(f"""
     <div class="metric-card">
@@ -171,11 +177,30 @@ with cols[2]:
 st.divider()
 
 # =====================================================
-# DISPLAY TABLE (CENTERED)
+# AUTO DETERMINE METRICS
+# =====================================================
+metric_columns = []
+
+# Dynamic per task_type per row
+for idx, row in df.iterrows():
+    task_type = row.get("task_type", "regression")
+    if task_type == "regression":
+        metric_columns += ["rmse", "r2", "mae"]
+    else:
+        # Check for f1_weighted first, fallback to f1
+        metric_columns += ["accuracy", "f1_weighted", "f1"]
+
+metric_columns = list(set(metric_columns))
+metric_columns = [col for col in metric_columns if col in df.columns and df[col].notnull().any()]
+
+# =====================================================
+# DISPLAY TABLE
 # =====================================================
 st.subheader("Models Details")
 
-display_cols = ["model_name", "version", "training_date", "rmse", "accuracy", "status_chip"]
+base_cols = ["model_name", "version", "training_date", "task_type"]
+display_cols = base_cols + metric_columns + ["status_chip"]
+
 df_display = df[display_cols].rename(columns={"status_chip": "Status"})
 
 st.markdown(f"""
