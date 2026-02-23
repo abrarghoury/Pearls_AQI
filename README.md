@@ -4,246 +4,380 @@
 [![MongoDB](https://img.shields.io/badge/mongodb-6.0-green?logo=mongodb)](https://www.mongodb.com/) 
 [![Streamlit](https://img.shields.io/badge/streamlit-1.24-orange?logo=streamlit)](https://streamlit.io/)
 
-**Pearls AQI Predictor** is an advanced Air Quality Index forecasting tool for urban environments. It leverages **real-time air pollution data**, a **Gradient Boosting regression model**, and **SHAP-based interpretability** to provide actionable insights for 24–72 hour AQI predictions.
+# 🌫 Pearls AQI Predictor
+
+Production-Grade, Serverless Multi-Day AQI Forecasting System
+
+🔗 **Live Dashboard:** [https://pearls-aqi.streamlit.app/](https://pearls-aqi.streamlit.app/)
+📍 Deployment Target: **Karachi**
 
 ---
 
-## 🚀 Features
+# 📖 Overview
 
-- 🔹 Real-time AQI dashboard with latest raw and cleaned data  
-- 🔹 24-hour, 48-hour, and 72-hour AQI forecasts with color-coded risk levels  
-- 🔹 Weather integration: temperature, humidity, wind, and pressure  
-- 🔹 Explainable AI using **SHAP** to identify key contributors to AQI  
-- 🔹 Modular pipeline: ingestion → feature engineering → prediction → dashboard  
-- 🔹 MongoDB backend for historical and latest data storage  
+**Pearls AQI Predictor** is an end-to-end machine learning system that forecasts Air Quality Index (AQI) for the next **24, 48, and 72 hours** using a fully automated, serverless architecture.
+
+This project collects **historical and real-time air quality and weather data from external APIs.**
+AQI data is obtained from **OpenWeather**, while meteorological data is sourced from **Open-Meteo**.
+
+Both datasets are aligned on an **hourly timestamp** and integrated into a unified dataset for downstream feature engineering and model training.
+
+The system implements a complete MLOps lifecycle:
+
+* Automated hourly data ingestion
+* Production-safe feature engineering
+* Historical backfilling
+* Multi-model training (regression + classification)
+* Dynamic model versioning using GridFS
+* Daily retraining
+* Real-time prediction pipeline
+* SHAP explainability
+* Streamlit cloud deployment
+* CI/CD via GitHub Actions
 
 ---
 
-## 🗂️ Project Structure
+# 🏗 System Architecture
 
+### Data Flow
+
+External APIs
+→ Raw MongoDB Collection
+→ Clean Dataset
+→ Feature Engineering
+→ Feature Sanity Validation
+→ Model Training
+→ Model Registry (GridFS)
+→ Prediction Pipeline
+→ Streamlit Dashboard
+
+The system runs entirely in the cloud with no dedicated server.
+
+---
+
+# 📡 Data Collection
+
+### 1️⃣ Air Quality Data
+
+* Source: OpenWeather Air Pollution API
+* Pollutants:
+
+  * PM2.5
+  * PM10
+  * NO₂
+  * SO₂
+  * O₃
+  * CO
+
+### 2️⃣ Meteorological Data
+
+* Source: Open-Meteo API
+* Weather features:
+
+  * Temperature
+  * Humidity
+  * Wind speed
+  * Pressure
+  * Other atmospheric variables
+
+### 3️⃣ Data Alignment Strategy
+
+* All records are converted to UTC
+* Hourly timestamp standardization
+* Duplicate timestamp removal
+* Missing value interpolation (time-based)
+* Forward/backward fill as fallback
+* Strict time sorting to preserve time-series integrity
+
+---
+
+# 🧠 Feature Engineering
+
+The feature pipeline is designed to be **production-safe**, preventing data leakage and ensuring compatibility between training and inference modes.
+
+---
+
+## 🔹 AQI Calculation (US EPA Standard)
+
+* Sub-index calculated for each pollutant using breakpoint tables
+* Final AQI = maximum sub-index
+* AQI class mapping:
+
+  * 1 → Good
+  * 2 → Moderate
+  * 3 → Unhealthy for Sensitive Groups
+  * 4 → Unhealthy
+  * 5 → Hazardous
+
+---
+
+## 🔹 Time-Based Features
+
+* Hour
+* Day of week
+* Month
+* Weekend indicator
+* Cyclical encoding:
+
+  * hour_sin / hour_cos
+  * dow_sin / dow_cos
+
+These capture seasonality and periodicity patterns.
+
+---
+
+## 🔹 Lag Features
+
+AQI Lags:
+
+* 1h, 3h, 6h, 12h, 24h, 48h, 72h
+
+Pollutant Lags:
+
+* 1h, 3h, 6h, 12h, 24h
+
+Weather Lags:
+
+* 1h, 24h
+
+Lag features allow the model to learn temporal dependencies.
+
+---
+
+## 🔹 Rolling Statistics
+
+* 6h rolling mean
+* 12h rolling mean
+* 24h rolling mean
+* 12h rolling standard deviation
+* 24h rolling standard deviation
+
+Captures short-term trends and volatility.
+
+---
+
+## 🔹 Delta Features
+
+Change rates:
+
+* AQI delta (1h, 3h, 6h, 24h)
+
+Measures momentum and rapid pollution spikes.
+
+---
+
+## 🔹 Ratio Features
+
+* PM2.5 / PM10
+* NO₂ / O₃
+
+Helps capture pollutant interaction patterns.
+
+---
+
+## 🔹 Target Engineering (Training Mode Only)
+
+Generated only when `PIPELINE_MODE=training`:
+
+* `target_aqi_t_plus_24h`
+* `target_aqi_class_t_plus_24h`
+* `target_aqi_class_t_plus_48h`
+* `target_aqi_class_t_plus_72h`
+
+Rows with missing future targets are dropped safely.
+During inference mode, no target shifting occurs.
+
+---
+
+# 🤖 Model Training Pipeline
+
+The training pipeline is fully automated and runs daily.
+
+---
+
+## Tasks
+
+### Regression
+
+Predict numeric AQI for +24h.
+
+### Classification
+
+Predict AQI category for:
+
+* +24h
+* +48h
+* +72h
+
+---
+
+## Models Implemented
+
+Regression:
+
+* Random Forest Regressor
+* Gradient Boosting Regressor
+* HistGradientBoosting Regressor
+
+Classification:
+
+* Random Forest Classifier
+* Gradient Boosting Classifier
+* XGBoost Classifier
+
+---
+
+## Training Strategy
+
+* Strict time-series split (80% train / 20% test)
+* Oversampling for class imbalance (RandomOverSampler)
+* Best model selected based on:
+
+  * R² (regression)
+  * Weighted F1-score (classification)
+
+---
+
+## Model Registry (GridFS)
+
+Each best-performing model is:
+
+* Serialized with joblib
+* Stored in MongoDB GridFS
+* Versioned dynamically (v1, v2, v3…)
+* Marked as active
+* Previous active models automatically archived
+
+Stored metadata includes:
+
+* Metrics
+* Feature list
+* Training duration
+* Data rows used
+* Pipeline version
+
+---
+
+# 🔁 CI/CD Automation
+
+## Hourly Workflow
+
+Runs every hour:
+
+* Data ingestion
+* Clean dataset build
+* Feature engineering
+* Sanity checks
+
+## Daily Workflow
+
+Runs once per day:
+
+* Training pipeline (training mode)
+* Prediction pipeline (inference mode)
+* Updates active models
+* Stores new predictions
+
+---
+
+# 📊 Exploratory Data Analysis
+
+Includes:
+
+* AQI trend visualization
+* Seasonal pattern detection
+* Pollutant correlation analysis
+* Volatility assessment
+* Clean feature export for analysis
+* Notebook: `aqi_EDA.ipynb`
+
+---
+
+# 🌐 Live Dashboard Features
+
+* 3-day AQI forecast
+* Historical AQI trends
+* Model performance metrics
+* SHAP-based feature importance
+* Hazard alerts
+* Interactive visualizations
+
+---
+
+# 📂 Project Structure
+
+```
 Pearls_AQI/
 │
-
-├── requirements.txt
-
-├── pyproject.toml
-
-├── check_latest_features.py
-
-│
-
-├── venv/ # Virtual environment (not pushed to GitHub)
-
-│
-
 ├── models/
-
-│ ├── train_model.py
-
-│ └── predict.py
-
-│
-├── eda/
-
-│ ├── export_clean_features_to_csv.py
-
-│ ├── aqi_EDA.ipynb
-
-│ └── clean_feature.csv
-
+│   ├── train_model.py
+│   └── predict.py
 │
 ├── data_pipeline/
-
-│ ├── ingest_latest.py
-
-│ ├── feature_engineering.py
-
-│ ├── build_clean_dataset.py
-
-│ ├── backfill.py
-
-│ ├── clear_database.py
-
-│ └── sanity_check_feature.py
-
+│   ├── ingest_latest.py
+│   ├── build_clean_dataset.py
+│   ├── feature_engineering.py
+│   ├── backfill.py
+│   └── sanity_check_feature.py
 │
 ├── config/
-
-│ ├── settings.py
-
-│ ├── constants.py
-
-│ ├── logging.py
-
-│ └── mongo.py
-
-│
-├── artifacts/
-
-│ └── models/
-
-│ └── (saved trained models)
+│   ├── settings.py
+│   ├── constants.py
+│   ├── logging.py
+│   └── mongo.py
 │
 ├── app/
-
-│ ├── main.py
-
-│ ├── app_config.py
-
-│ │
-│ ├── services/
-
-│ │ ├── aqi_utils.py
-
-│ │ └── mongo_service.py
-
-│ │
-│ └── pages/
-
-│ └── AQI_Trends.py
-
+│   ├── main.py
+│   ├── services/
+│   └── pages/
 │
-└── .streamlit/
-
-└── config.toml
-
+└── .github/workflows/
+```
 
 ---
 
-## ⚙️ System Architecture
-
-
-
-Data Source
-↓
-Ingestion Pipeline (ingest_latest.py)
-↓
-Feature Engineering (feature_engineering.py)
-↓
-Clean Dataset Builder (build_clean_dataset.py)
-↓
-Model Training (train_model.py)
-↓
-Prediction (predict.py)
-↓
-MongoDB Storage
-↓
-Streamlit Dashboard (main.py)
-
-
----
-
-## 🚀 Key Components
-
-### 🔹 Data Pipeline
-Located in `data_pipeline/`
-
-- `ingest_latest.py` → Fetches and stores latest AQI data  
-- `feature_engineering.py` → Creates time-based & pollutant features  
-- `build_clean_dataset.py` → Produces ML-ready dataset  
-- `backfill.py` → Historical data processing  
-- `sanity_check_feature.py` → Data validation  
-- `clear_database.py` → Reset utility  
-
----
-
-### 🔹 Model Layer
-Located in `models/`
-
-- `train_model.py` → Trains Gradient Boosting regression model  
-- `predict.py` → Generates 24h / 48h / 72h predictions  
-
-Saved trained models are stored in:
-
-
-
-artifacts/models/
-
-
----
-
-### 🔹 EDA Layer
-Located in `eda/`
-
-- `aqi_EDA.ipynb` → Exploratory Data Analysis notebook  
-- `export_clean_features_to_csv.py` → Export utility  
-- `clean_feature.csv` → Clean dataset snapshot  
-
----
-
-### 🔹 Configuration Layer
-Located in `config/`
-
-- `settings.py` → Environment & MongoDB configs  
-- `constants.py` → Collection names & constants  
-- `logging.py` → Logging setup  
-- `mongo.py` → Mongo connection wrapper  
-
----
-
-### 🔹 Dashboard (Streamlit App)
-Located in `app/`
-
-- `main.py` → Main dashboard entry point  
-- `app_config.py` → App UI settings  
-- `services/` → Backend logic for dashboard  
-- `pages/AQI_Trends.py` → Multi-page analytics view  
-
-Streamlit configuration:
-
-
-
-.streamlit/config.toml
-
-
----
-
-## 📊 Features
-
-- ✅ Real-time AQI display
-- ✅ 3-day AQI Forecast
-- ✅ Weather Snapshot Integration
-- ✅ SHAP Explainability (Global + Local)
-- ✅ MongoDB Atlas backend
-- ✅ Modular production-ready architecture
-
----
-
-## 💻 Run Locally
-
-### 1️⃣ Create virtual environment
+# 🚀 How to Run Locally
 
 ```bash
-python -m venv venv
-venv\Scripts\activate   
-
-2️⃣ Install dependencies
+git clone <repo-url>
+cd Pearls_AQI
 pip install -r requirements.txt
 
-3️⃣ Run data pipeline
-python -m data_pipeline.ingest_latest
-python -m data_pipeline.feature_engineering
-python -m data_pipeline.build_clean_dataset
+# Training
+PIPELINE_MODE=training python -m models.train_model
 
-4️⃣ Train model
-python models/train_model.py
+# Prediction
+PIPELINE_MODE=inference python -m models.predict
 
-5️⃣ Run dashboard
+# Run dashboard
 streamlit run app/main.py
-
-Perfect 👍 samajh gaya — SHAP remove kar dete hain aur ending ko proper professional close dete hain.
-
-Main tumhe final clean ending section de raha hoon jo tum README ke end me paste kar sakte ho 👇
+```
 
 ---
 
-## 🔮 Future Enhancements
+# 🎯 Key Highlights
 
-The following improvements are planned to further enhance the system:
+* Fully automated serverless ML system
+* Time-series safe architecture
+* Multi-horizon forecasting
+* Dynamic model versioning
+* GridFS production storage
+* CI/CD integration
+* Explainable AI with SHAP
+* Real-world deployment
 
-- Cloud deployment (AWS / Streamlit Cloud)
-- Alert system for hazardous AQI levels
-- Historical AQI trend analytics dashboard
+---
+
+# 🌍 Impact
+
+Air pollution poses a significant public health challenge in **Karachi**.
+
+This system enables:
+
+* Early warnings for hazardous AQI
+* Data-driven environmental monitoring
+* Scalable forecasting to additional cities
+
 
 ---
 
@@ -252,8 +386,4 @@ This project is under continuous improvement and optimization.
 
 ---
 
-## 🤝 Contribution
 
-Contributions, suggestions, and improvements are welcome.
-
-If you'd like to contribute:
