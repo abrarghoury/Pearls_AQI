@@ -1,0 +1,25 @@
+2026-02-26 13:02:08,168 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE STARTED ==========
+2026-02-26 13:02:08,169 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-26 13:02:10,016 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-26 13:02:14,880 - AQI_PIPELINE - INFO - CLEAN rows loaded: 4472
+2026-02-26 13:09:48,457 - AQI_PIPELINE - INFO - ========== FEATURE PIPELINE COMPLETED | MODE=inference | ROWS=4472 | COLUMNS=86 ==========
+2026-02-26 13:10:16,420 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=INFERENCE ==========
+2026-02-26 13:10:16,421 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-26 13:10:17,908 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-26 13:10:23,251 - AQI_PIPELINE - INFO - Loaded feature rows: 4472
+2026-02-26 13:10:23,474 - AQI_PIPELINE - WARNING - Dropping constant columns: ['aqi_delta_1h', 'aqi_delta_24h', 'aqi_delta_3h', 'aqi_delta_6h', 'aqi_lag_12h', 'aqi_lag_1h', 'aqi_lag_24h', 'aqi_lag_3h', 'aqi_lag_48h', 'aqi_lag_6h', 'aqi_lag_72h', 'aqi_roll_mean_12h', 'aqi_roll_mean_24h', 'aqi_roll_mean_6h', 'aqi_roll_std_12h', 'aqi_roll_std_24h', 'co', 'co_lag_12h', 'co_lag_1h', 'co_lag_24h', 'co_lag_3h', 'co_lag_6h', 'day_of_week', 'dow_cos', 'dow_sin', 'hour', 'hour_cos', 'hour_sin', 'humidity', 'humidity_lag_1h', 'humidity_lag_24h', 'is_weekend', 'month', 'no2', 'no2_lag_12h', 'no2_lag_1h', 'no2_lag_24h', 'no2_lag_3h', 'no2_lag_6h', 'no2_o3_ratio', 'o3', 'o3_lag_12h', 'o3_lag_1h', 'o3_lag_24h', 'o3_lag_3h', 'o3_lag_6h', 'pm10', 'pm10_lag_12h', 'pm10_lag_1h', 'pm10_lag_24h', 'pm10_lag_3h', 'pm10_lag_6h', 'pm2_5', 'pm2_5_lag_12h', 'pm2_5_lag_1h', 'pm2_5_lag_24h', 'pm2_5_lag_3h', 'pm2_5_lag_6h', 'pm2_5_pm10_ratio', 'precipitation', 'precipitation_lag_1h', 'precipitation_lag_24h', 'pressure', 'pressure_lag_1h', 'pressure_lag_24h', 'so2', 'so2_lag_12h', 'so2_lag_1h', 'so2_lag_24h', 'so2_lag_3h', 'so2_lag_6h', 'temperature', 'temperature_lag_1h', 'temperature_lag_24h', 'wind_direction', 'wind_direction_lag_1h', 'wind_direction_lag_24h', 'wind_speed', 'wind_speed_lag_1h', 'wind_speed_lag_24h']
+2026-02-26 13:10:23,609 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 1 | Modified: 0
+2026-02-26 13:10:23,616 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=1 | MODE=INFERENCE ==========
+2026-02-26 13:11:03,854 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=TRAINING ==========
+2026-02-26 13:11:03,856 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-26 13:11:05,227 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-26 13:11:11,509 - AQI_PIPELINE - INFO - Loaded feature rows: 4472
+2026-02-26 13:11:53,463 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 0 | Modified: 4400
+2026-02-26 13:11:53,464 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=4400 | MODE=TRAINING ==========
+2026-02-26 19:15:47,330 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING STARTED | MODE=INFERENCE ==========
+2026-02-26 19:15:47,331 - AQI_PIPELINE - INFO - Connecting to MongoDB Atlas...
+2026-02-26 19:15:50,432 - AQI_PIPELINE - INFO - Connected to MongoDB | DB: pearls_aqi
+2026-02-26 19:18:19,660 - AQI_PIPELINE - INFO - Loaded feature rows: 4472
+2026-02-26 19:18:19,854 - AQI_PIPELINE - WARNING - Dropping constant columns: ['aqi_delta_1h', 'aqi_delta_24h', 'aqi_delta_3h', 'aqi_delta_6h', 'aqi_lag_12h', 'aqi_lag_1h', 'aqi_lag_24h', 'aqi_lag_3h', 'aqi_lag_48h', 'aqi_lag_6h', 'aqi_lag_72h', 'aqi_roll_mean_12h', 'aqi_roll_mean_24h', 'aqi_roll_mean_6h', 'aqi_roll_std_12h', 'aqi_roll_std_24h', 'co', 'co_lag_12h', 'co_lag_1h', 'co_lag_24h', 'co_lag_3h', 'co_lag_6h', 'day_of_week', 'dow_cos', 'dow_sin', 'hour', 'hour_cos', 'hour_sin', 'humidity', 'humidity_lag_1h', 'humidity_lag_24h', 'is_weekend', 'month', 'no2', 'no2_lag_12h', 'no2_lag_1h', 'no2_lag_24h', 'no2_lag_3h', 'no2_lag_6h', 'no2_o3_ratio', 'o3', 'o3_lag_12h', 'o3_lag_1h', 'o3_lag_24h', 'o3_lag_3h', 'o3_lag_6h', 'pm10', 'pm10_lag_12h', 'pm10_lag_1h', 'pm10_lag_24h', 'pm10_lag_3h', 'pm10_lag_6h', 'pm2_5', 'pm2_5_lag_12h', 'pm2_5_lag_1h', 'pm2_5_lag_24h', 'pm2_5_lag_3h', 'pm2_5_lag_6h', 'pm2_5_pm10_ratio', 'precipitation', 'precipitation_lag_1h', 'precipitation_lag_24h', 'pressure', 'pressure_lag_1h', 'pressure_lag_24h', 'so2', 'so2_lag_12h', 'so2_lag_1h', 'so2_lag_24h', 'so2_lag_3h', 'so2_lag_6h', 'temperature', 'temperature_lag_1h', 'temperature_lag_24h', 'wind_direction', 'wind_direction_lag_1h', 'wind_direction_lag_24h', 'wind_speed', 'wind_speed_lag_1h', 'wind_speed_lag_24h']
+2026-02-26 19:18:19,962 - AQI_PIPELINE - INFO - Bulk upsert complete | Inserted: 0 | Modified: 1
+2026-02-26 19:18:19,976 - AQI_PIPELINE - INFO - ========== FEATURE CLEANING COMPLETE | ROWS=1 | MODE=INFERENCE ==========
